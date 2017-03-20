@@ -38,7 +38,7 @@
             }
         }]
     },
-    "baseUrl": "https://git.jelastic.com/rs/docker-swarm-cluster/raw/master/addons",
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "nodes": [{
         "count": "${settings.mngr}",
         "cloudlets": 32,
