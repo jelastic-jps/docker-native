@@ -54,24 +54,22 @@
         "cloudlets": 32
     }],
     "onInstall": [{
-        "if (true)": {
-            "install": [{
-                "jps": "${baseUrl}/docker-ssh-keys.jps"
-            }, {
-                "jps": "${baseUrl}/docker-swarm-init.jps"
-            }, {
-                "jps": "${baseUrl}/docker-swarm-scaling.jps",
-                "settings": {
-                    "baseUrl": "${baseUrl}"
-                }
-            }, {
-                "jps": "${baseUrl}/autoscaling-triggers.jps",
-                "settings": {
-                    "mngr": "${settings.mngr}",
-                    "worker": "${settings.worker}"
-                }
-            }]
-        }
+        "install": [{
+            "jps": "${baseUrl}/docker-ssh-keys.jps"
+        }, {
+            "jps": "${baseUrl}/docker-swarm-init.jps"
+        }, {
+            "jps": "${baseUrl}/docker-swarm-scaling.jps",
+            "settings": {
+                "baseUrl": "${baseUrl}"
+            }
+        }, {
+            "jps": "${baseUrl}/autoscaling-triggers.jps",
+            "settings": {
+                "mngr": "${settings.mngr}",
+                "worker": "${settings.worker}"
+            }
+        }]
     }, {
         "if ('${settings.stack}' == 'deploy')": {
             "install": {
