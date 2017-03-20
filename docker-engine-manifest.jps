@@ -1,0 +1,84 @@
+{
+    "jpsType": "install",
+    "id": "docker-engine",
+    "description": "## Docker Standalone Engine\n```\ndocker build; docker-compose up; docker swarm join\n```",
+    "logo": "http://res.cloudinary.com/blog-mornati-net/image/upload/v1472668207/sz9sfwiji9foh0cv1v5p.png",
+    "name": "Docker Engine",
+    "region": "vz7",
+    "settings": {
+        "fields": [{
+            "type": "spinner",
+            "name": "nodes",
+            "caption": "Nodes",
+            "min": 1,
+            "max": 10,
+            "default": 1
+        },{
+            "name": "mode",
+            "type": "radio-fieldset",
+            "values": {
+                "clean": "Clean Engine",
+                "deploy": "Deploy Compose YML",
+                "swarm": "Connect to Swarm"
+            },
+            "default": "clean",
+            "showIf": {
+                "deploy": {
+                    "name": "repo",
+                    "type": "string",
+                    "caption": "Compose Repo",
+                    "default": "https://github.com/docker/example-voting-app.git",
+                    "required": true
+                },
+                "swarm": [{
+                    "name": "token",
+                    "type": "string",
+                    "caption": "Join Token ",
+                    "default": "",
+                    "required": true
+                }, {
+                    "name": "host",
+                    "type": "string",
+                    "caption": "Host IP",
+                    "default": "",
+                    "required": true
+                }]
+            }
+        }]
+    },
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
+    "nodes": [{
+        "count": "${settings.nodes}",
+        "cloudlets": 32,
+        "image": "devbeta/docker-ce-compose",
+        "nodeGroup": "cp",
+        "displayName": "Engine Node",
+        "extip": "true"
+    }],
+    "onInstall": [{
+        "install": {
+            "jps": "${baseUrl}/scripts/docker-ssh-keys.jps"
+        }
+    }, {
+        "if ('${settings.mode}' == 'deploy')": {
+            "install": {
+                "jps": "${baseUrl}/scripts/docker-deploy.jps",
+                "settings": {
+                    "repo": "${settings.repo}",
+                    "type": "compose"
+                }
+            }
+        }
+    }, {
+        "if ('${settings.mode}' == 'swarm')": [{
+            "sleep": "10000"
+        },{
+            "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
+        }]
+    }],
+    "success": {
+        "text": "/addons/text/engine-success.mrkd",
+        "email": "/addons/text/engine-success.mrkd"
+    },
+    "jpsVersion": "1.0"
+}

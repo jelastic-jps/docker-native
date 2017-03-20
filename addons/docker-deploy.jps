@@ -1,0 +1,34 @@
+{
+  "jpsType": "update",
+  "id": "docker-deploy",
+  "name": "Docker Deploy ",
+  "onInstall": [
+    {
+      "if ('${settings.type}' == 'stack')": "stackDeploy"
+    },
+    {
+      "if ('${settings.type}' == 'compose')": "composeUp"
+    }
+  ],
+  "actions": {
+    "stackDeploy": {
+      "cmd[${nodes.cp.first.id}]": [
+        "docker network create --driver overlay proxy",
+        "curl -o docker-stack.yml ${settings.yml} &>> /var/log/run.log",
+        "docker stack deploy -c docker-stack.yml proxy &>> /var/log/run.log"
+      ]
+    },{
+    "serviceDeploy" : {
+      "cmd[${nodes.cp.first.id}]": [
+        "docker service create --name demo --replicas $NBR_REPLICA --publish ${EXPOSED_PORT}:${SERVICE_PORT} ${SERVICE_IMAGE})"
+      ]
+    },
+    },
+    "composeUp": {
+      "cmd[${nodes.cp.first.id}]": [
+        "git clone ${settings.repo} &>> /var/log/run.log",
+        "cd example-voting-app && docker-compose up -d &>> /var/log/run.log"
+      ]
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+    "jpsType": "install",
+    "id": "docker-swarm-ultra",
+    "description": "## Ultra Sclable Docker Swarm Cluster\n```\ndocker swarm init; docker-machine create; docker stack deploy\n```",
+    "logo": "http://getcarina.github.io/jupyterhub-tutorial/slides/img/docker-swarm.png",
+    "name": "Swarm Cluster",
+    "region": "vz7",
+    "settings": {
+        "fields": [{
+            "type": "spinner",
+            "name": "mngr",
+            "caption": "Manager",
+            "min": 1,
+            "max": 10,
+            "default": 3
+        }, {
+            "type": "spinner",
+            "name": "worker",
+            "caption": "Worker",
+            "min": 1,
+            "max": 20,
+            "default": 5
+        }, {
+            "name": "stack",
+            "type": "radio-fieldset",
+            "values": {
+                "clean": "Clean Cluster",
+                "deploy": "Deploy Stack YML"
+            },
+            "default": "clean",
+            "showIf": {
+                "deploy": {
+                    "name": "yml",
+                    "type": "string",
+                    "caption": "Stack YML Url",
+                    "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml"
+                }
+            }
+        }]
+    },
+    "baseUrl": "https://git.jelastic.com/rs/docker-swarm-cluster/raw/master/addons",
+    "nodes": [{
+        "count": "${settings.mngr}",
+        "cloudlets": 32,
+        "image": "devbeta/docker-ce",
+        "nodeGroup": "cp",
+        "displayName": "Manager",
+        "extip": "true"
+    }, {
+        "count": "${settings.worker}",
+        "nodeGroup": "worker",
+        "image": "devbeta/docker-ce",
+        "displayName": "Worker",
+        "cloudlets": 32
+    }],
+    "onInstall": [{
+        "if (true)": {
+            "install": [{
+                "jps": "${baseUrl}/docker-ssh-keys.jps"
+            }, {
+                "jps": "${baseUrl}/docker-swarm-init.jps"
+            }, {
+                "jps": "${baseUrl}/docker-swarm-scaling.jps",
+                "settings": {
+                    "baseUrl": "${baseUrl}"
+                }
+            }, {
+                "jps": "${baseUrl}/autoscaling-triggers.jps",
+                "settings": {
+                    "mngr": "${settings.mngr}",
+                    "worker": "${settings.worker}"
+                }
+            }]
+        }
+    }, {
+        "if ('${settings.stack}' == 'deploy')": {
+            "install": {
+                "jps": "${baseUrl}/docker-deploy.jps",
+                "settings": {
+                    "yml": "${settings.yml}",
+                    "type": "stack"
+                }
+            }
+        }
+    }],
+    "jpsVersion": "1.0"
+}

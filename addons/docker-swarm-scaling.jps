@@ -1,0 +1,109 @@
+{
+  "jpsType": "update",
+  "id": "docker-swarm-scaling",
+  "name": "Docker Swarm Scaling",
+  "globals": {
+    "update-tokens": "${settings.baseUrl}/scripts/update-swarm-tokens.js?${settings.token}",
+    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js?${settings.token}"
+  },
+  "onInstall": [
+    {
+      "log": "${globals.success-text}"
+    },
+    {
+      "script": "${globals.update-tokens}"
+    },
+    {
+      "log": "Connecting Manager Nodes"
+    },
+    {
+      "forEach(nodes.cp)": {
+        "if (${@i.id} != ${nodes.cp.first.id})": {
+          "script": "${globals.connect-node}",
+          "params": {
+            "id": "${@i.id}",
+            "role": "manager"
+          }
+        }
+      }
+    },
+    {
+      "log": "Connecting Worker Nodes"
+    },
+    {
+      "forEach(nodes.worker)": {
+        "script": "${globals.connect-node}",
+        "params": {
+          "id": "${@i.id}",
+          "role": "worker"
+        }
+      }
+    }
+  ],
+  "onAfterScaleOut[worker]": [
+    {
+      "script": "${globals.update-tokens}"
+    },
+    {
+      "forEach(event.response.nodes)": {
+        "script": "${globals.connect-node}",
+        "params": {
+          "id": "${@i.id}",
+          "role": "worker"
+        }
+      }
+    }
+  ],
+  "onAfterScaleOut[cp]": [
+    {
+      "script": "${globals.update-tokens}"
+    },
+    {
+      "forEach(event.response.nodes)": {
+        "script": "${globals.connect-node}",
+        "params": {
+          "id": "${@i.id}",
+          "role": "manager"
+        }
+      }
+    }
+  ],
+  "onBeforeScaleIn[worker]": {
+    "forEach(event.response.nodes)": {
+      "removeNode": {
+        "id": "${@i.id}"
+      }
+    }
+  },
+  "onBeforeScaleIn[cp]": {
+    "forEach(event.response.nodes)": {
+      "removeNode": {
+        "id": "${@i.id}"
+      }
+    }
+  },
+  "actions": {
+    "connectNode": {
+      "cmd[${this.id}]": [
+        "docker swarm leave --force &>> /var/log/run.log",
+        "docker swarm join --token ${this.token} ${nodes.cp.first.intIP}:2377"
+      ]
+    },
+    "removeNode": [
+      {
+        "cmd[${this.id}]": "docker swarm leave --force &>> /var/log/run.log"
+      },
+      {
+        "cmd[${nodes.cp.first.id}]": [
+          "NODE=node${this.id}-${env.domain}",
+          "docker node demote $NODE &>> /var/log/run.log",
+          "docker node rm --force $NODE &>> /var/log/run.log"
+        ]
+      }
+    ]
+  },
+  "success": {
+    "text": "/text/swarm-success.mrkd",
+    "email": "/text/swarm-success.mrkd"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "jpsType": "update",
+  "id": "docker-swarm-init",
+  "name": "Docker Swarm Init",
+  "onInstall": [
+    {
+      "log": "Swarm Init"
+    },
+    {
+      "cmd[${nodes.cp.first.id}]": [
+        "docker swarm leave --force &>> /var/log/run.log",
+        "docker swarm init --advertise-addr ${nodes.cp.first.extIPs[0]}"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+    "jpsType": "update",
+    "id": "docker-swarm-autoscaling",
+    "name": "Swarm Autoscaling",
+    "globals": {
+        "script": "${baseUrl}/scripts/autoscaling-triggers.js"
+    },
+    "onInstall": [{
+        "script": "${globals.script}",
+        "params": {
+            "nodeGroup": "cp",
+            "upLimit": "10",
+            "downLimit": "${settings.mngr}"
+        }
+    }, {
+        "script": "${globals.script}",
+        "params": {
+            "nodeGroup": "worker",
+            "upLimit": "10",
+            "downLimit": "${settings.worker}"
+        }
+    }]
+}
