@@ -3,8 +3,8 @@
   "id": "docker-swarm-scaling",
   "name": "Docker Swarm Scaling",
   "globals": {
-    "update-tokens": "${settings.baseUrl}/scripts/update-swarm-tokens.js?${settings.token}",
-    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js?${settings.token}"
+    "update-tokens": "${settings.baseUrl}/scripts/update-swarm-tokens.js",
+    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js"
   },
   "onInstall": [
     {
