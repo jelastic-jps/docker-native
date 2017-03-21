@@ -11,7 +11,8 @@
       "log": "${globals.success-text}"
     },
     {
-      "script": "${globals.update-tokens}"
+      "script": "${globals.update-tokens}",
+      "nodeId": ${nodes.cp.first.id}
     },
     {
       "log": "Connecting Manager Nodes"
