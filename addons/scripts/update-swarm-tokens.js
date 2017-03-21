@@ -40,6 +40,9 @@ db = jelastic.data.base
 resp = db.DefineType(new String('swarmTokens'), {appid: 'string(32)', manager:'string', worker:'string'}, 'appid')
 if (resp.result != 0 && resp.result != 1002) return resp
 
+//waiting for 1 second after the new type was defined (temporary issue)   
+if (resp.result == 0) java.lang.Thread.sleep(1000)
+
 envAppid = '${env.appid}'
 resp = db.DeleteObjectsByCriteria('swarmTokens', {appid: envAppid})
 if (resp.result != 0 && resp.result != 1004) return resp 
