@@ -1,7 +1,7 @@
 {
     "jpsType": "install",
     "id": "docker-swarm-ultra",
-    "description": "## Ultra Sclable Docker Swarm Cluster\n```\ndocker swarm init; docker-machine create; docker stack deploy\n```",
+    "description": "## Ultra Scalable Docker Swarm Cluster\n```\ndocker swarm init; docker-machine create; docker stack deploy\n```",
     "logo": "http://getcarina.github.io/jupyterhub-tutorial/slides/img/docker-swarm.png",
     "name": "Swarm Cluster",
     "region": "vz7",
@@ -81,5 +81,5 @@
             }
         }
     }],
-    "jpsVersion": "1.0"
+    "jpsVersion": "1.1"
 }
