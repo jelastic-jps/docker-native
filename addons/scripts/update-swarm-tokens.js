@@ -42,7 +42,7 @@ if (resp.result != 0 && resp.result != 1002) return resp
 
 envAppid = '${env.appid}'
 resp = db.DeleteObjectsByCriteria('swarmTokens', {appid: envAppid})
-if (resp.result != 0) return resp 
+if (resp.result != 0 && resp.result != 1004) return resp 
 
 return db.CreateObject('swarmTokens', {appid: envAppid, manager: manager, worker: worker})
 
