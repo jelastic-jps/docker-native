@@ -12,7 +12,7 @@
     },
     {
       "script": "${globals.update-tokens}",
-      "nodeId": ${nodes.cp.first.id}
+      "nodeId": "${nodes.cp.first.id}"
     },
     {
       "log": "Connecting Manager Nodes"
