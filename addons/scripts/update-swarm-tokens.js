@@ -6,17 +6,25 @@ cmd = 'docker swarm join-token -q ', _.commandList = [{
     command: cmd + 'worker'
 }]
 
-//return success or request next manager 
-nodes = ctl.GetEnvInfo(envName, session).nodes
+nodeid = getParam('nodeId')
 debug = []
-for (i = 0; i < nodes.length; i++){
-    if (nodes[i].nodeGroup != 'cp') continue; 
-    _.nodeId = nodes[i].id;
 
+if (nodeId) {
+    _.nodeId = nodeId
     resp = ctl.ExecCmdById(_)
     debug.push(resp);
-    
-    if (resp.result == 0) break
+} else {
+    //return success or request next manager 
+    nodes = ctl.GetEnvInfo(envName, session).nodes
+    for (i = 0; i < nodes.length; i++){
+        if (nodes[i].nodeGroup != 'cp') continue; 
+        _.nodeId = nodes[i].id
+
+        resp = ctl.ExecCmdById(_)
+        debug.push(resp);
+
+        if (resp.result == 0) break
+    }
 }
 
 //checking the last response from the cycle
