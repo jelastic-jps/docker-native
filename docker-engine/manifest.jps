@@ -57,12 +57,12 @@
     }],
     "onInstall": [{
         "install": {
-            "jps": "${baseUrl}/scripts/docker-ssh-keys.jps"
+            "jps": "${baseUrl}/docker-ssh-keys.jps"
         }
     }, {
         "if ('${settings.mode}' == 'deploy')": {
             "install": {
-                "jps": "${baseUrl}/scripts/docker-deploy.jps",
+                "jps": "${baseUrl}/docker-deploy.jps",
                 "settings": {
                     "repo": "${settings.repo}",
                     "type": "compose"
