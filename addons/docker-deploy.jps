@@ -17,12 +17,11 @@
         "curl -o docker-stack.yml ${settings.yml} &>> /var/log/run.log",
         "docker stack deploy -c docker-stack.yml proxy &>> /var/log/run.log"
       ]
-    },{
-    "serviceDeploy" : {
+    },
+    "serviceDeploy": {
       "cmd[${nodes.cp.first.id}]": [
         "docker service create --name demo --replicas $NBR_REPLICA --publish ${EXPOSED_PORT}:${SERVICE_PORT} ${SERVICE_IMAGE})"
       ]
-    },
     },
     "composeUp": {
       "cmd[${nodes.cp.first.id}]": [
