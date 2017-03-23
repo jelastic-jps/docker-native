@@ -3,8 +3,9 @@
   "id": "docker-swarm-scaling",
   "name": "Docker Swarm Scaling",
   "globals": {
+    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js",
     "update-tokens": "${settings.baseUrl}/scripts/update-swarm-tokens.js",
-    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js"
+    "get-tokens": "${settings.baseUrl}/scripts/get-swarm-tokens.js"
   },
   "onInstall": [
     {
@@ -31,11 +32,13 @@
     {
       "forEach(nodes.worker)": {
         "script": "${globals.connect-node}",
-        "params": {
-          "id": "${@i.id}",
-          "role": "worker"
-        }
+        "id": "${@i.id}",
+        "role": "worker"
       }
+    },
+    {
+      "script": "${globals.get-tokens}",
+      "next": "sendTokens"
     }
   ],
   "onAfterScaleOut[worker]": [
@@ -45,10 +48,8 @@
     {
       "forEach(event.response.nodes)": {
         "script": "${globals.connect-node}",
-        "params": {
-          "id": "${@i.id}",
-          "role": "worker"
-        }
+        "id": "${@i.id}",
+        "role": "worker"
       }
     }
   ],
@@ -100,8 +101,12 @@
       }
     ]
   },
-  "success": {
-    "text": "/text/swarm-success.mrkd",
-    "email": "/text/swarm-success.mrkd"
+  "sendTokens": {
+    "success": {
+      "text": "/text/swarm-success.mrkd",
+      "email": "/text/swarm-success.mrkd"
+    },
+    "manager": "${this.manager}",
+    "worker": "${this.worker}"
   }
 }
