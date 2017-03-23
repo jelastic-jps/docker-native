@@ -104,7 +104,7 @@
       "install": {
         "jps": {
           "type": "update",
-          "name": "test",
+          "name": "show-success",
           "success": {
             "text": "/text/swarm-success.mrkd",
             "email": "/text/swarm-success.mrkd"
