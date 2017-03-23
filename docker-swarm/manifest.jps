@@ -42,14 +42,14 @@
     "nodes": [{
         "count": "${settings.mngr}",
         "cloudlets": 32,
-        "image": "devbeta/docker-ce",
+        "image": "jelastic/docker-ce",
         "nodeGroup": "cp",
         "displayName": "Manager",
         "extip": "true"
     }, {
         "count": "${settings.worker}",
         "nodeGroup": "worker",
-        "image": "devbeta/docker-ce",
+        "image": "jelastic/docker-ce",
         "displayName": "Worker",
         "cloudlets": 32
     }],
