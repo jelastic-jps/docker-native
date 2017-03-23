@@ -111,8 +111,8 @@
           }
         },
         "settings": {
-          "manager": "${this.manager}",
-          "worker": "${this.worker}"
+          "manager_token": "${this.manager}",
+          "worker_token": "${this.worker}"
         }
       }
     }
