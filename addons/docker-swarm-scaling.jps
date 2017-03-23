@@ -99,14 +99,14 @@
           "docker node rm --force $NODE &>> /var/log/run.log"
         ]
       }
-    ]
-  },
-  "sendTokens": {
-    "success": {
-      "text": "/text/swarm-success.mrkd",
-      "email": "/text/swarm-success.mrkd"
-    },
-    "manager": "${this.manager}",
-    "worker": "${this.worker}"
+    ],
+    "sendTokens": {
+      "success": {
+        "text": "/text/swarm-success.mrkd",
+        "email": "/text/swarm-success.mrkd"
+      },
+      "manager": "${this.manager}",
+      "worker": "${this.worker}"
+    }
   }
 }
