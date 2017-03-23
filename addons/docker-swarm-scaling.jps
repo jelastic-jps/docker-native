@@ -105,6 +105,7 @@
         "jps": {
           "type": "update",
           "name": "show-success",
+          "baseUrl": "${settings.baseUrl}",
           "success": {
             "text": "/text/swarm-success.mrkd",
             "email": "/text/swarm-success.mrkd"
