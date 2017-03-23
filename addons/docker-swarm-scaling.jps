@@ -101,12 +101,20 @@
       }
     ],
     "sendTokens": {
-      "success": {
-        "text": "/text/swarm-success.mrkd",
-        "email": "/text/swarm-success.mrkd"
-      },
-      "manager": "${this.manager}",
-      "worker": "${this.worker}"
+      "install": {
+        "jps": {
+          "type": "update",
+          "name": "test",
+          "success": {
+            "text": "/text/swarm-success.mrkd",
+            "email": "/text/swarm-success.mrkd"
+          }
+        },
+        "settings": {
+          "manager": "${this.manager}",
+          "worker": "${this.worker}"
+        }
+      }
     }
   }
 }
