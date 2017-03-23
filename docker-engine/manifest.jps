@@ -50,7 +50,7 @@
     "nodes": [{
         "count": "${settings.nodes}",
         "cloudlets": 32,
-        "image": "devbeta/docker-ce-compose",
+        "image": "jelastic/docker-ce-compose",
         "nodeGroup": "cp",
         "displayName": "Engine Node",
         "extip": "true"
