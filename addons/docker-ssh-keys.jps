@@ -8,11 +8,14 @@
   "actions": {
     "uploadKeys": {
       "script": [
-        "var resp = jelastic.users.account.GetSSHKeys(appid, session, false);",
-        "if (resp.result != 0 || resp.keys == null) return resp;",
+        "resp = jelastic.users.account.GetSSHKeys(appid, session, false)",
+        "if (resp.result != 0 || resp.keys == null) return resp",
         "if (resp.keys.length == 0) return { result: 'warning', message: 'Public SSH key was not found, please add a new public SSH key https://docs.jelastic.com/ssh-add-key' }",
-        "//uploading the first public key",
-        "return {result:0, onAfterReturn: {'cmd[${nodes.cp.first.id}]': 'echo ' + resp.keys[0].publicKey + ' >> ~/.ssh/authorized_keys'}}"
+        "//getting the first public key",
+        "key = resp.keys[0].publicKey",        
+        "cmd = ['echo $key >> ~/.ssh/authorized_keys']",
+        "if (key.startsWith('ssh-rsa')) { cmd.unshift('key="'+key+'"') } else { cmd.unshift('echo -e "'+key+'" > /tmp/key.pub; key=$(ssh-keygen -i -f /tmp/key.pub); rm -f /tmp/key.pub')}",
+        "return {result:0, onAfterReturn: {'cmd[${nodes.cp.first.id}]': cmd}}"
       ]
     }
   }
