@@ -6,7 +6,7 @@ cmd = 'docker swarm join-token -q ', _.commandList = [{
     command: cmd + 'worker'
 }]
 
-nodeid = getParam('nodeId')
+nodeId = getParam('nodeId')
 debug = []
 
 if (nodeId) {
