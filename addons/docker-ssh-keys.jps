@@ -14,7 +14,7 @@
         "//getting the first public key",
         "key = resp.keys[0].publicKey",        
         "cmd = ['echo $key >> ~/.ssh/authorized_keys']",
-        "if (key.startsWith('ssh-rsa')) { cmd.unshift('key='+key) } else { cmd.unshift('echo -e \"'+key+'\" > /tmp/key.pub; key=$(ssh-keygen -i -f /tmp/key.pub); rm -f /tmp/key.pub')}",
+        "if (key.indexOf('ssh-rsa') == 0) { cmd.unshift('key=\"'+key+'\"') } else { cmd.unshift('echo -e \"'+key+'\" > /tmp/key.pub; key=$(ssh-keygen -i -f /tmp/key.pub); rm -f /tmp/key.pub')}",
         "return {result:0, onAfterReturn: {'cmd[${nodes.cp.first.id}]': cmd}}"
       ]
     }
