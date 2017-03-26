@@ -30,8 +30,8 @@ Here, you need to specify some details to get the cluster you need:
 * **Manager** - number of manager nodes to be included into cluster (with [Public IP](https://docs.jelastic.com/public-ipv4) being automatically attached to each container)
 * **Worker** - number of worker nodes to be included into cluster
 * choose deployment type:
-  - _Clean Cluster_ - to create a bare cluster and subsequently deploy the required services manually 
-  - _Deploy Stack YML_ - to instantly deploy the necessary Docker Swarm services with _[docker stack deploy](https://docs.docker.com/engine/reference/commandline/stack_deploy/)_ by specifying link to the appropriate [compose YAML file](https://docs.docker.com/compose/compose-file/):
+  - **_Clean Cluster_** - to create a bare cluster and subsequently deploy the required services manually 
+  - **_Deploy Stack YML_** - to instantly deploy the necessary Docker Swarm services with _[docker stack deploy](https://docs.docker.com/engine/reference/commandline/stack_deploy/)_ by specifying link to the appropriate [compose YAML file](https://docs.docker.com/compose/compose-file/):
 
 ![Docker Swarm Deploy](/images/docker-swarm-deploy.png)
 
