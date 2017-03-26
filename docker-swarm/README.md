@@ -1,3 +1,7 @@
+![Docker Swarm Logo](/images/docker-swarm-logo.png) 
+
+Prepackaged Docker Swarm cluster with out-of-box automatic vertical and horizontal scaling.
+
 ## What is Docker Swarm Package
 
 A **Swarm** cluster represents a set of [Docker Engine](https://github.com/jelastic-jps/docker-native/tree/master/docker-engine) nodes run in a _swarm_ mode, which constitutes a fault-tolerant platform with built-in cluster management features to keep your dockerized services running and available. Within Jelastic, it is provided as an environment of two layers with the following node roles: 
