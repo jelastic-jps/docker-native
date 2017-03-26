@@ -8,7 +8,7 @@ A standalone Docker Engine with automatic vertical scaling.
 
 During this package deployment, you can choose between the following options:
 * to set up a separate standalone Docker Engine (either a bare server or with the required Docker service run inside)
-* to connect the created node to the already existing Docker Swarm cluster with _Manager_ or _Worker_ role (you are provided with the appropriate _[join tokens](https://docs.docker.com/engine/swarm/join-nodes/#join-as-a-worker-node)_ upon installation)
+* to connect the created node to the already existing Docker Swarm cluster with _Manager_ or _Worker_ role (you will be provided with the appropriate _[join tokens](https://docs.docker.com/engine/swarm/join-nodes/#join-as-a-worker-node)_ upon installation)
 
 ## Docker Engine Installation
 
