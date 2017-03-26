@@ -55,6 +55,8 @@ After the successful installation, your cluster can be accessed in two ways for 
 
 ## Requirements
 
+Before installing the package, please consider the following points:
+
 * For Docker Swarm cluster creation, the appropriate Platform should run Jelastic 5.0.5 version with the Native Dockers support enabled. This feature availability depends on a cluster administrator - you can search for a suitable provider within the [Jelastic Cloud Union](https://jelastic.cloud/?versions=5.0) catalog.
 * The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is provided for billing users only, thus you need to convert your account beforehand.
 * In order to be successfully installed, the current Docker Swarm solution also requires a [public SSH key](https://docs.jelastic.com/ssh-add-key) being attached to your Jelastic account (with the corresponding private key handled at your local machine for further connection to the cluster). 
