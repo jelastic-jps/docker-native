@@ -27,7 +27,7 @@
                     "name": "repo",
                     "type": "string",
                     "caption": "Compose Repo",
-                    "default": "https://github.com/joaojeronimo/docker-compose-hello-world.git",
+                    "default": "https://github.com/vegasbrianc/docker-compose-demo.git",
                     "required": true
                 },
                 "swarm": [{
