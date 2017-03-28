@@ -1,7 +1,10 @@
 {
     "jpsType": "install",
     "id": "docker-engine",
-    "description": "## Docker Standalone Engine\n```\ndocker build; docker-compose up; docker swarm join\n```",
+    "description": {
+        "text": "## Docker Standalone Engine\n```\ndocker build; docker-compose up; docker swarm join\n```",
+        "short": "Docker Standalone Engine"
+    },
     "logo": "http://res.cloudinary.com/blog-mornati-net/image/upload/v1472668207/sz9sfwiji9foh0cv1v5p.png",
     "name": "Docker Engine",
     "region": "vz7",
