@@ -104,7 +104,7 @@
       "install": {
         "jps": {
           "type": "update",
-          "name": "show-success",
+          "name": "Swarm Cluster",
           "baseUrl": "${settings.baseUrl}",
           "success": {
             "text": "/text/swarm-success.mrkd",
