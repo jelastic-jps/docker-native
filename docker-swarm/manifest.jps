@@ -57,9 +57,9 @@
         "cloudlets": 32
     }],
     "onInstall": [{
+        "script": "${baseUrl}/scripts/upload-ssh-keys.js"
+    }, {
         "install": [{
-            "jps": "${baseUrl}/docker-ssh-keys.jps"
-        }, {
             "jps": "${baseUrl}/docker-swarm-init.jps"
         }, {
             "jps": "${baseUrl}/docker-swarm-scaling.jps",

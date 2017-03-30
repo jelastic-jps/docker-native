@@ -59,9 +59,7 @@
         "extip": "true"
     }],
     "onInstall": [{
-        "install": {
-            "jps": "${baseUrl}/docker-ssh-keys.jps"
-        }
+        "script": "${baseUrl}/scripts/upload-ssh-keys.js"
     }, {
         "if ('${settings.mode}' == 'deploy')": {
             "install": {
