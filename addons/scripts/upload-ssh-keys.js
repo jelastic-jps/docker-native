@@ -20,6 +20,6 @@ for (i = 0; i < kl; i++) {
 return {
     result: 0,
     onAfterReturn: {
-        'cmd[${nodes.cp}]': cmd
+        'cmd[cp]': cmd
     }
 }
