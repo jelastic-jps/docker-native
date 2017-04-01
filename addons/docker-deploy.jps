@@ -29,5 +29,11 @@
         "cd application && docker-compose up -d &>> /var/log/run.log"
       ]
     }
-  }
+  },
+  "reponses" : {
+        "4109": {
+            "type": "error",
+            "message": "Deployment error: please check */var/log/run.log* inside node for more details."
+        }
+    }
 }
