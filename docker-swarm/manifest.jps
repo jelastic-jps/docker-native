@@ -36,7 +36,8 @@
                     "name": "yml",
                     "type": "string",
                     "caption": "Stack YML Url",
-                    "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml"
+                    "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml",
+                    "required": true
                 }
             }
         }]
