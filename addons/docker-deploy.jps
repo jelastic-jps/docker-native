@@ -31,9 +31,9 @@
     }
   },
   "reponses" : {
-        "4109": {
+        "error": {
             "type": "error",
-            "message": "Deployment error: please check */var/log/run.log* inside node for more details."
+            "message": "Deployment failed: please check */var/log/run.log* inside the node for more details."
         }
     }
 }
