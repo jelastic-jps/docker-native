@@ -24,7 +24,7 @@
       ]
     },
     "composeUp": {
-      "cmd[${nodes.cp.first.id}]": [
+      "cmd[cp]": [
         "git clone ${settings.repo} application &>> /var/log/run.log",
         "cd application && docker-compose up -d &>> /var/log/run.log"
       ]
