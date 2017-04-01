@@ -30,7 +30,7 @@
       ]
     }
   },
-  "reponses" : {
+  "responses" : {
         "error": {
             "type": "error",
             "message": "Deployment failed: please check */var/log/run.log* inside the node for more details."
