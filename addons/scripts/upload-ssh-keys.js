@@ -1,10 +1,8 @@
 resp = jelastic.users.account.GetSSHKeys(appid, session, false)
 if (resp.result != 0 || resp.keys == null) return resp
 kl = resp.keys.length
-if (kl == 0) return {
-    result: 'warning',
-    message: 'Public SSH key was not found, please add a new public SSH key https://docs.jelastic.com/ssh-add-key'
-}
+if (kl == 0) return {result: 0, onAfterReturn: "no-ssh-keys"}
+
 //uploading all public keys
 cmd = [], add = 'echo $key >> ~/.ssh/authorized_keys'
 for (i = 0; i < kl; i++) {
