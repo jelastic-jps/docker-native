@@ -1,4 +1,4 @@
-## Docker Standalone Engine
+### Docker Standalone Engine
 ```
 docker build; docker-compose up; docker swarm join
 ```
