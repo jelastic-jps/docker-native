@@ -1,7 +1,7 @@
 {
+  "jpsType": "update",
   "id": "import-ssh-keys",
   "name": "Import Public SSH Keys",
-  "nodeGroup": ["cp", "mngr"],
   "description": "Import all public SSH keys to your Docker Engine nodes",
   "buttons": [
     {
