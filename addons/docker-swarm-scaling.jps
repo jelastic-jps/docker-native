@@ -2,14 +2,9 @@
   "jpsType": "update",
   "id": "docker-swarm-scaling",
   "name": "Docker Swarm Scaling",
-  "globals": {
-    "connect-node": "${settings.baseUrl}/scripts/connect-swarm-node.js",
-    "update-tokens": "${settings.baseUrl}/scripts/update-swarm-tokens.js",
-    "get-tokens": "${settings.baseUrl}/scripts/get-swarm-tokens.js"
-  },
   "onInstall": [
     {
-      "script": "${globals.update-tokens}",
+      "script": "${settings.update-tokens}",
       "nodeId": "${nodes.cp.first.id}"
     },
     {
@@ -18,7 +13,7 @@
     {
       "forEach(nodes.cp)": {
         "if (${@i.id} != ${nodes.cp.first.id})": {
-          "script": "${globals.connect-node}",
+          "script": "${settings.connect-node}",
           "params": {
             "id": "${@i.id}",
             "role": "manager"
@@ -31,23 +26,19 @@
     },
     {
       "forEach(nodes.worker)": {
-        "script": "${globals.connect-node}",
+        "script": "${settings.connect-node}",
         "id": "${@i.id}",
         "role": "worker"
       }
-    },
-    {
-      "script": "${globals.get-tokens}",
-      "next": "sendTokens"
     }
   ],
   "onAfterScaleOut[worker]": [
     {
-      "script": "${globals.update-tokens}"
+      "script": "${settings.update-tokens}"
     },
     {
       "forEach(event.response.nodes)": {
-        "script": "${globals.connect-node}",
+        "script": "${settings.connect-node}",
         "id": "${@i.id}",
         "role": "worker"
       }
@@ -55,11 +46,11 @@
   ],
   "onAfterScaleOut[cp]": [
     {
-      "script": "${globals.update-tokens}"
+      "script": "${settings.update-tokens}"
     },
     {
       "forEach(event.response.nodes)": {
-        "script": "${globals.connect-node}",
+        "script": "${settings.connect-node}",
         "params": {
           "id": "${@i.id}",
           "role": "manager"
@@ -99,23 +90,6 @@
           "docker node rm --force $NODE &>> /var/log/run.log"
         ]
       }
-    ],
-    "sendTokens": {
-      "install": {
-        "jps": {
-          "type": "update",
-          "name": "Swarm Cluster",
-          "baseUrl": "${settings.baseUrl}",
-          "success": {
-            "text": "/text/swarm-success.mrkd",
-            "email": "/text/swarm-success.mrkd"
-          }
-        },
-        "settings": {
-          "manager_token": "${this.manager}",
-          "worker_token": "${this.worker}"
-        }
-      }
-    }
+    ]
   }
 }
