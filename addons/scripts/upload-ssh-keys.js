@@ -3,11 +3,7 @@ if (resp.result != 0 || resp.keys == null) return resp
 kl = resp.keys.length
 if (kl == 0 || true) return {
     result: 0,
-    onAfterReturn: {
-        success: {
-            sufix: '-wo-ssh'
-        }
-    }
+    onAfterReturn: "no-ssh-keys"
 }
 
 //uploading all public keys
@@ -24,11 +20,7 @@ for (i = 0; i < kl; i++) {
 }
 return {
     result: 0,
-    onAfterReturn: [{
+    onAfterReturn: {
         'cmd[cp,worker]': cmd,
-    }, {
-        success: {
-            sufix: ''
-        }
-    }]
+    }
 }
