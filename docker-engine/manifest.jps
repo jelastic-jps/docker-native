@@ -114,8 +114,8 @@
         "no-ssh-keys": {
             "return": {
                 "type": "success",
-                "message": "/text/no-ssh-keys.md",
-                "email": "/text/no-ssh-keys.md"
+                "message": "/text/engine-success-no-ssh-keys.md",
+                "email": "/text/engine-success-no-ssh-keys.md"
             }
         }
     },
