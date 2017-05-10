@@ -1,11 +1,12 @@
 {
     "jpsType": "install",
     "id": "docker-engine",
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/dev/addons",
     "description": {
-        "text": "## Docker Standalone Engine\n```\ndocker build; docker-compose up; docker swarm join\n```",
+        "text": "/text/description-engine.md",
         "short": "Docker Standalone Engine"
     },
-    "logo": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/images/docker-engine-logo.png",
+    "logo": "../images/docker-engine-logo.png",
     "name": "Docker Engine",
     "region": "vz7",
     "settings": {
@@ -52,7 +53,6 @@
             }
         }]
     },
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "nodes": [{
         "count": "${settings.nodes}",
         "cloudlets": 32,
@@ -62,11 +62,9 @@
         "extip": "true"
     }],
     "onInstall": [{
-        "script": "${baseUrl}/scripts/upload-ssh-keys.js"
-    }, {
         "if ('${settings.mode}' == 'deploy')": {
             "install": {
-                "jps": "${baseUrl}/docker-deploy.jps",
+                "jps": "/docker-deploy.jps",
                 "settings": {
                     "repo": "${settings.repo}",
                     "type": "compose"
@@ -79,10 +77,51 @@
         }, {
             "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
         }]
+    }, {
+        "installAddon": {
+            "id": "import-ssh-keys",
+            "nodeGroup": "cp",
+            "settings": {
+                "baseUrl": "${baseUrl}"
+            }
+        }
+    }, "upload-ssh-keys"],
+    "addons": [{
+        "id": "import-ssh-keys",
+        "name": "Import Public SSH Keys",
+        "nodeGroup": "cp",
+        "description": "Import all public SSH keys to your Docker Engine nodes",
+        "buttons": [{
+            "caption": "Re-import",
+            "action": "upload-ssh-keys",
+            "confirmText": "You are going to import all public SSH keys. Continue?",
+            "loadingText": "Importing ...",
+            "successText": "SSH keys have been imported successfully."
+        }],
+        "actions": {
+            "upload-ssh-keys": {
+                "script": "/scripts/upload-ssh-keys.js"
+            },
+            "no-ssh-keys": {
+                "log": "ssh keys not found"
+            }
+        }
     }],
+    "actions": {
+        "upload-ssh-keys": {
+            "script": "/scripts/upload-ssh-keys.js"
+        },
+        "no-ssh-keys": {
+            "return": {
+                "type": "success",
+                "message": "/text/no-ssh-keys.md",
+                "email": "/text/no-ssh-keys.md"
+            }
+        }
+    },
     "success": {
-        "text": "text/engine-success.mrkd",
-        "email": "text/engine-success.mrkd"
+        "text": "/text/engine-success.md",
+        "email": "/text/engine-success.md"
     },
     "jpsVersion": "1.1"
 }
