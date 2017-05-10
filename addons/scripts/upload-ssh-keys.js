@@ -1,7 +1,7 @@
 resp = jelastic.users.account.GetSSHKeys(appid, session, false)
 if (resp.result != 0 || resp.keys == null) return resp
 kl = resp.keys.length
-if (kl == 0 || true) return {
+if (kl == 0) return {
     result: 0,
     onAfterReturn: "no-ssh-keys"
 }
@@ -16,8 +16,8 @@ for (i = 0; i < kl; i++) {
     } else {
         cmd.unshift('echo -e \"' + key + '\" > /tmp/key.pub; key=$(ssh-keygen -i -f /tmp/key.pub); rm -f /tmp/key.pub')
     }
-
 }
+
 return {
     result: 0,
     onAfterReturn: {
