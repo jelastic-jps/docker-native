@@ -70,7 +70,6 @@
         "scaling-triggers",
         "deploy",
         "re-import-button",
-        "upload-ssh-keys",
         "get-tokens"
     ],
     "actions": {
@@ -117,16 +116,6 @@
                 }
             }
         },
-        "upload-ssh-keys": {
-            "script": "/scripts/upload-ssh-keys.js"
-        },
-        "no-ssh-keys": {
-            "return": {
-                "type": "success",
-                "message": "/text/no-ssh-keys.md",
-                "email": "/text/no-ssh-keys.md"
-            }
-        },
         "get-tokens": {
             "script": "${globals.get-tokens}",
             "next": "send-tokens"
@@ -137,6 +126,19 @@
                     "type": "update",
                     "name": "Swarm Cluster",
                     "baseUrl": "${baseUrl}",
+                    "onInstall": ["upload-ssh-keys"],
+                    "actions": {
+                        "upload-ssh-keys": {
+                            "script": "/scripts/upload-ssh-keys.js"
+                        },
+                        "no-ssh-keys": {
+                            "return": {
+                                "type": "success",
+                                "message": "/text/swarm-success-no-ssh-keys.md",
+                                "email": "/text/swarm-success-no-ssh-keys.md"
+                            }
+                        }
+                    },
                     "success": {
                         "text": "/text/swarm-success.md",
                         "email": "/text/swarm-success.md"
