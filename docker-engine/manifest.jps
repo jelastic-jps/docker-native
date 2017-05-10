@@ -9,6 +9,9 @@
     "logo": "../images/docker-engine-logo.png",
     "name": "Docker Engine",
     "region": "vz7",
+    "globals": {
+        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
+    },
     "settings": {
         "fields": [{
             "type": "spinner",
