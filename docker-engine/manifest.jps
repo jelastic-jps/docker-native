@@ -61,53 +61,40 @@
         "displayName": "Engine Node",
         "extip": "true"
     }],
-    "onInstall": [{
-        "if ('${settings.mode}' == 'deploy')": {
-            "install": {
-                "jps": "/docker-deploy.jps",
-                "settings": {
-                    "repo": "${settings.repo}",
-                    "type": "compose"
+    "onInstall": [
+        "deploy",
+        "connect-to-swarm",
+        "re-import-button",
+        "upload-ssh-keys"
+    ],
+    "actions": {
+        "deploy": {
+            "if ('${settings.mode}' == 'deploy')": {
+                "install": {
+                    "jps": "/docker-deploy.jps",
+                    "settings": {
+                        "repo": "${settings.repo}",
+                        "type": "compose"
+                    }
                 }
             }
-        }
-    }, {
-        "if ('${settings.mode}' == 'swarm')": [{
-            "sleep": "10000"
-        }, {
-            "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
-        }]
-    }, {
-        "installAddon": {
-            "id": "import-ssh-keys",
-            "nodeGroup": "cp",
-            "settings": {
-                "baseUrl": "${baseUrl}"
+        },
+        "connect-to-swarm": {
+            "if ('${settings.mode}' == 'swarm')": [{
+                "sleep": "10000"
+            }, {
+                "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
+            }]
+        },
+        "re-import-button": {
+            "install": {
+                "jps": "${baseUrl}/re-import-ssh-keys.jps",
+                "nodeGroup": "cp",
+                "settings": {
+                    "upload-ssh-keys": "${globals.upload-ssh-keys}"
+                }
             }
-        }
-    }, "upload-ssh-keys"],
-    "addons": [{
-        "id": "import-ssh-keys",
-        "name": "Import Public SSH Keys",
-        "nodeGroup": "cp",
-        "description": "Import all public SSH keys to your Docker Engine nodes",
-        "buttons": [{
-            "caption": "Re-import",
-            "action": "upload-ssh-keys",
-            "confirmText": "You are going to import all public SSH keys. Continue?",
-            "loadingText": "Importing ...",
-            "successText": "SSH keys have been imported successfully."
-        }],
-        "actions": {
-            "upload-ssh-keys": {
-                "script": "/scripts/upload-ssh-keys.js"
-            },
-            "no-ssh-keys": {
-                "log": "ssh keys not found"
-            }
-        }
-    }],
-    "actions": {
+        },
         "upload-ssh-keys": {
             "script": "/scripts/upload-ssh-keys.js"
         },
