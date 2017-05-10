@@ -1,13 +1,20 @@
 {
     "jpsType": "install",
     "id": "docker-swarm-ultra",
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/dev/addons",
     "description": {
-        "text": "## Ultra Scalable Docker Swarm Cluster\n```\ndocker swarm init; docker-machine create; docker stack deploy\n```",
+        "text": "/text/description-swarm.md",
         "short": "Ultra Scalable Docker Swarm Cluster"
     },
-    "logo": "http://getcarina.github.io/jupyterhub-tutorial/slides/img/docker-swarm.png",
+    "logo": "../images/docker-swarm-logo.png",
     "name": "Swarm Cluster",
     "region": "vz7",
+    "globals": {
+        "connect-node": "${baseUrl}/scripts/connect-swarm-node.js",
+        "update-tokens": "${baseUrl}/scripts/update-swarm-tokens.js",
+        "get-tokens": "${baseUrl}/scripts/get-swarm-tokens.js",
+        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
+    },
     "settings": {
         "fields": [{
             "type": "spinner",
@@ -43,7 +50,6 @@
             }
         }]
     },
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "nodes": [{
         "count": "${settings.mngr}",
         "cloudlets": 32,
@@ -58,33 +64,90 @@
         "displayName": "Worker",
         "cloudlets": 32
     }],
-    "onInstall": [{
-        "script": "${baseUrl}/scripts/upload-ssh-keys.js"
-    }, {
-        "install": [{
-            "jps": "${baseUrl}/docker-swarm-init.jps"
-        }, {
-            "jps": "${baseUrl}/docker-swarm-scaling.jps",
-            "settings": {
-                "baseUrl": "${baseUrl}"
-            }
-        }, {
-            "jps": "${baseUrl}/autoscaling-triggers.jps",
-            "settings": {
-                "mngr": "${settings.mngr}",
-                "worker": "${settings.worker}"
-            }
-        }]
-    }, {
-        "if ('${settings.stack}' == 'deploy')": {
+    "onInstall": [
+        "init-swarm",
+        "scaling-events",
+        "scaling-triggers",
+        "deploy",
+        "re-import-button",
+        "upload-ssh-keys",
+        "get-tokens"
+    ],
+    "actions": {
+        "init-swarm": {
+            "install": "${baseUrl}/docker-swarm-init.jps"
+        },
+        "scaling-events": {
             "install": {
-                "jps": "${baseUrl}/docker-deploy.jps",
+                "jps": "${baseUrl}/docker-swarm-scaling.jps",
                 "settings": {
-                    "yml": "${settings.yml}",
-                    "type": "stack"
+                    "baseUrl": "${baseUrl}",
+                    "connect-node": "${globals.connect-node}",
+                    "update-tokens": "${globals.update-tokens}",
+                    "get-tokens": "${globals.get-tokens}"
+                }
+            }
+        },
+        "scaling-triggers": {
+            "install": {
+                "jps": "${baseUrl}/autoscaling-triggers.jps",
+                "settings": {
+                    "mngr": "${settings.mngr}",
+                    "worker": "${settings.worker}"
+                }
+            }
+        },
+        "deploy": {
+            "if ('${settings.stack}' == 'deploy')": {
+                "install": {
+                    "jps": "${baseUrl}/docker-deploy.jps",
+                    "settings": {
+                        "yml": "${settings.yml}",
+                        "type": "stack"
+                    }
+                }
+            }
+        },
+        "re-import-button": {
+            "install": {
+                "jps": "${baseUrl}/re-import-ssh-keys.jps",
+                "nodeGroup": "cp",
+                "settings": {
+                    "upload-ssh-keys": "${globals.upload-ssh-keys}"
+                }
+            }
+        },
+        "upload-ssh-keys": {
+            "script": "/scripts/upload-ssh-keys.js"
+        },
+        "no-ssh-keys": {
+            "return": {
+                "type": "success",
+                "message": "/text/no-ssh-keys.md",
+                "email": "/text/no-ssh-keys.md"
+            }
+        },
+        "get-tokens": {
+            "script": "${globals.get-tokens}",
+            "next": "send-tokens"
+        },
+        "send-tokens": {
+            "install": {
+                "jps": {
+                    "type": "update",
+                    "name": "Swarm Cluster",
+                    "baseUrl": "${baseUrl}",
+                    "success": {
+                        "text": "/text/swarm-success.md",
+                        "email": "/text/swarm-success.md"
+                    }
+                },
+                "settings": {
+                    "manager_token": "${this.manager}",
+                    "worker_token": "${this.worker}"
                 }
             }
         }
-    }],
+    },
     "jpsVersion": "1.1"
 }
