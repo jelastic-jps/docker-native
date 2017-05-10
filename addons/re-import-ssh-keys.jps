@@ -1,0 +1,23 @@
+{
+  "id": "import-ssh-keys",
+  "name": "Import Public SSH Keys",
+  "nodeGroup": ["cp", "mngr"],
+  "description": "Import all public SSH keys to your Docker Engine nodes",
+  "buttons": [
+    {
+      "caption": "Re-import",
+      "action": "upload-ssh-keys",
+      "confirmText": "You are going to import all public SSH keys. Continue?",
+      "loadingText": "Importing ...",
+      "successText": "SSH keys have been imported successfully."
+    }
+  ],
+  "actions": {
+    "upload-ssh-keys": {
+      "script": "${settings.upload-ssh-keys}"
+    },
+    "no-ssh-keys": {
+      "log": "ssh keys not found"
+    }
+  }
+}
