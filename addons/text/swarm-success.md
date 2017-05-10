@@ -14,14 +14,14 @@ eval $(docker-machine env ${env.envName})
 ### Add a Manager node to the cluster
 ```
 docker swarm join \
---token ${this.manager_token} \
+--token ${settings.manager_token} \
 ${nodes.cp.first.extIPs[0]}:2377
 ```
 
 ### Add a Woker node to the cluster
 ```
 docker swarm join \
---token ${this.worker_token} \
+--token ${settings.worker_token} \
 ${nodes.cp.first.extIPs[0]}:2377
 ```
 
