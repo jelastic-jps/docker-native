@@ -1,4 +1,4 @@
-## Ultra Scalable Docker Swarm Cluster
+### Ultra Scalable Docker Swarm Cluster
 ```
 docker swarm init; docker-machine create; docker stack deploy
 ```
