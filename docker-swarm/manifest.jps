@@ -126,10 +126,12 @@
                     "type": "update",
                     "name": "Swarm Cluster",
                     "baseUrl": "${baseUrl}",
-                    "onInstall": ["upload-ssh-keys"],
+                    "onInstall": [
+                        "upload-ssh-keys"
+                    ],
                     "actions": {
                         "upload-ssh-keys": {
-                            "script": "/scripts/upload-ssh-keys.js"
+                            "script": "${globals.upload-ssh-keys}"
                         },
                         "no-ssh-keys": {
                             "return": {
