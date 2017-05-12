@@ -74,7 +74,7 @@
         "deploy": {
             "if ('${settings.mode}' == 'deploy')": {
                 "install": {
-                    "jps": "/docker-deploy.jps",
+                    "jps": "${baseUrl}/docker-deploy.jps",
                     "settings": {
                         "repo": "${settings.repo}",
                         "type": "compose"
