@@ -1,4 +1,4 @@
-To further operate it via docker-machine, add [public SSH keys](https://docs.jelastic.com/ssh-add-key) to your Jelastic account and apply them with the <i>Import Public SSH Keys</i> add-on for the correspoding node. 
+To further operate it via docker-machine, add [public SSH keys](https://docs.jelastic.com/ssh-add-key) to your Jelastic account and apply them with the <i>Import Public SSH Keys</i> add-on for the correspoding nodes. 
 
 Alternatively, you can use Jelastic [SSH Gate](https://docs.jelastic.com/ssh-gate) to establish connection to any node within your account.
 
