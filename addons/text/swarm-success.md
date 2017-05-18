@@ -6,7 +6,7 @@ docker-machine create --driver generic \
 --engine-storage-driver overlay ${env.envName}
 ```
 
-### Connect to the environemnt
+### Connect to the environment
 ```
 eval $(docker-machine env ${env.envName})
 ```
