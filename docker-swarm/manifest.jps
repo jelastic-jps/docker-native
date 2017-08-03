@@ -7,7 +7,7 @@
         "short": "Ultra Scalable Docker Swarm Cluster"
     },
     "logo": "../images/docker-swarm-logo.png",
-    "name": "Swarm Cluster",
+    "name": "Docker Swarm",
     "region": "vz7",
     "globals": {
         "connect-node": "${baseUrl}/scripts/connect-swarm-node.js",
