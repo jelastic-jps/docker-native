@@ -1,195 +1,117 @@
 {
-    "jpsType": "update",
-    "jpsVersion": "0.99",
-    "id": "glassfish-cluster-addon",
-    "name": "GlassFish Cluster",
-    "logo": "https://github.com/jelastic-jps/glassfish/raw/master/glassfish-cluster/img/glassfish-logo.png",
-    "description": "Transforms standalone nodes to cluster",
+    "jpsType": "install",
+    "id": "docker-engine",
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
+    "description": {
+        "text": "/text/description-engine.md",
+        "short": "Docker Standalone Engine"
+    },
+    "logo": "../images/docker-engine-logo.png",
+    "name": "Docker Engine",
+    "region": "vz7",
     "globals": {
-        "path": "/home/.ssh",
-        "port": "28080"
+        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
     },
-    "onInstall": {
-        "if (nodes.das)": [
-            "cleanCluster",
-            "restartContainers[cp]",
-            "updateLinkInIndex",
-            "updateLinkInNotDas"
-        ],
-        "if (!nodes.das)": {
-            "if (nodes.cp.length == 1)": {
-                "localhost:4848->das:4848": {
-                    "nodeGroup": "cp",
-                    "dasNodeId": "${nodes.cp.first.id}"
-                }
+    "settings": {
+        "fields": [{
+            "type": "spinner",
+            "name": "nodes",
+            "caption": "Nodes",
+            "min": 1,
+            "max": 10,
+            "default": 1
+        }, {
+            "name": "mode",
+            "type": "radio-fieldset",
+            "values": {
+                "clean": "Clean Engine",
+                "deploy": "Deploy Compose YML",
+                "swarm": "Connect to Swarm"
             },
-            "if (nodes.cp.length > 1)": {
-                "buildCluster": {
-                    "redeploy": "false"
-                }
-            }
-        }
-    },
-    "onBeforeServiceScaleOut[cp]": [{
-        "if (nodes.das)": {
-            "forEach(event.response.nodes)": [{
-                    "expose:28080->80": {
-                        "id": "${@i.id}"
-                    }
-                }, {
-                    "localhost:4848->das:4848": {
-                        "nodeGroup": "cp",
-                        "dasNodeId": "${@i.id}"
-                    }
+            "default": "clean",
+            "showIf": {
+                "deploy": {
+                    "name": "repo",
+                    "type": "string",
+                    "caption": "Compose Repo",
+                    "default": "https://github.com/vegasbrianc/docker-compose-demo.git",
+                    "required": true,
+                    "vtype": "url"
                 },
-                "restartContainers[${@i.id}]"
-            ]
-        }
-    }, {
-        "if (!nodes.das)": {
-            "buildCluster": {
-                "redeploy": "true"
-            }
-        }
-    }],
-    "onBeforeScaleIn[cp]": {
-        "forEach(event.response.nodes)": {
-            "cmd[${@i.id}]": "$STACK_PATH/service.sh delete"
-        }
-    },
-    "onAfterScaleOut[cp]": "restartRequired",
-    "onAfterScaleIn[cp]": "restartRequired",
-    "onAfterClone": {
-        "if (nodes.das)": {
-            "install": {
-                "jps": "${baseUrl}/auto-cluster.jps?_r=${fn.random}",
-                "envName": "${event.response.env.envName}"
-            }
-        }
-    },
-    "actions": {
-        "cleanCluster": {
-            "cmd[das]": "$STACK_PATH/service.sh clean"
-        },
-        "buildCluster": [{
-            "addNodes": {
-                "cloudlets": 16,
-                "displayName": "DAS",
-                "nodeType": "docker",
-                "nodeGroup": "das",
-                "dockerName": "${nodes.cp.first.customitem.dockerName}",
-                "dockerTag": "${nodes.cp.first.customitem.dockerTag}",
-                "metadata": {
-                    "layer": "das"
-                },
-                "dockerEnvVars": {
-                    "DAS": "true"
-                },
-                "dockerVolumes": [
-                    "${globals.path}"
-                ],
-                "startService": false
-            }
-        }, {
-            "installAddon": {
-                "id": "configureVolumesAndLinks",
-                "settings": {
-                    "redeploy": "${this.redeploy}"
-                }
-            }
-        }],
-        "restartRequired": {
-            "cmd[das]": "$STACK_PATH/service.sh restartRequired"
-        },
-        "redeployApps": {
-            "cmd[${nodes.cp.first.id}]": [
-                "$STACK_PATH/service.sh redeploy"
-            ]
-        },
-        "expose:28080->80": {
-            "cmd[${this.id}]": [
-                "echo JELASTIC_EXPOSE=${globals.port} >> /.jelenv"
-            ],
-            "user": "root"
-        },
-        "updateLinkInIndex": [{
-            "localhost:4848->das:4848": {
-                "nodeGroup": "cp",
-                "dasNodeId": "${nodes.das.first.id}"
-            }
-        }, {
-            "localhost:4848->das:4848": {
-                "nodeGroup": "das",
-                "dasNodeId": "${nodes.das.first.id}"
-            }
-        }],
-        "localhost:4848->das:4848": {
-            "cmd": {
-                "nodeGroup": "${this.nodeGroup}",
-                "commands": "sed -i -e \"s/http.*:\\/\\/.*:4848/https:\\/\\/node${this.dasNodeId}-${env.domain}:4848/g\" ${STACK_PATH}/glassfish/domains/domain1/docroot/index.html"
-            }
-        },
-        "updateLinkInNotDas": {
-            "cmd[cp]": [
-                "d=com/sun/enterprise/v3/admin/adapter",
-                "mkdir -p $d",
-                "echo '<html><head><meta http-equiv=\"refresh\" content=\"0;url=https://node${nodes.das.first.id}-${env.domain}:4848/\" /></head></html>' > $d/statusNotDAS.html",
-                "jar uf $STACK_PATH/glassfish/modules/kernel.jar $d/statusNotDAS.html",
-                "rm -rf com"
-            ]
-        }
-    },
-    "addons": [{
-        "id": "configureVolumesAndLinks",
-        "onInstall": [{
-                "forEach(nodes.cp)": {
-                    "if (${@i.ismaster})": {
-                        "cmd[${@i.id}]": "cp $PSWD_FILE ~/pswd"
-                    }
-                }
-            }, {
-                "api": "env.control.AddContainerVolumeByGroup",
-                "nodeGroup": "cp",
-                "path": "${globals.path}"
-            }, {
-                "api": "env.file.AddMountPointByGroup",
-                "nodeGroup": "cp",
-                "path": "${globals.path}",
-                "protocol": "nfs",
-                "sourcePath": "${globals.path}",
-                "sourceNodeId": "${nodes.das.first.id}",
-                "name": "SSH Keys",
-                "readOnly": false
-            }, {
-                "cmd[${nodes.cp.first.id}]": [
-                    "mv ~/pswd ${PSWD_FILE}.old"
-                ]
-            }, {
-                "forEach(nodes.cp)": [{
-                    "cmd[${@i.id}]": [
-                        "iptables -t nat -I PREROUTING -p tcp -m tcp --dport 4848 -j REDIRECT --to-ports 24848"
-                    ],
-                    "user": "root"
+                "swarm": [{
+                    "name": "token",
+                    "type": "string",
+                    "caption": "Join Token ",
+                    "default": "",
+                    "required": true
                 }, {
-                    "api": "env.control.LinkDockerNodes",
-                    "sourceNodeId": "${nodes.das.first.id}",
-                    "targetNodeId": "${@i.id}",
-                    "alias": "das",
-                    "groupAlias": "das"
-                }, {
-                    "expose:28080->80": {
-                        "id": "${@i.id}"
-                    }
+                    "name": "host",
+                    "type": "string",
+                    "caption": "Host IP",
+                    "default": "",
+                    "required": true,
+                    "regex": "^(?=\\d+\\.\\d+\\.\\d+\\.\\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.?){4}$",
+                    "regexText": "Invalid IP address format"
                 }]
+            }
+        }]
+    },
+    "nodes": [{
+        "count": "${settings.nodes}",
+        "cloudlets": 32,
+        "image": "jelastic/docker-ce-compose",
+        "nodeGroup": "cp",
+        "displayName": "Engine Node",
+        "extip": "true"
+    }],
+    "onInstall": [
+        "deploy",
+        "connect-to-swarm",
+        "re-import-button",
+        "upload-ssh-keys"
+    ],
+    "actions": {
+        "deploy": {
+            "if ('${settings.mode}' == 'deploy')": {
+                "install": {
+                    "jps": "${baseUrl}/docker-deploy.jps",
+                    "settings": {
+                        "repo": "${settings.repo}",
+                        "type": "compose"
+                    }
+                }
+            }
+        },
+        "connect-to-swarm": {
+            "if ('${settings.mode}' == 'swarm')": [{
+                "sleep": "10000"
             }, {
-                "api": "env.control.ExecDockerRunCmd",
-                "nodeId": "${nodes.das.first.id}"
-            }, {
-                "if (${settings.redeploy})": "redeployApps"
-            },
-            "restartContainers[cp]",
-            "updateLinkInIndex",
-            "updateLinkInNotDas"
-        ]
-    }]
+                "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
+            }]
+        },
+        "re-import-button": {
+            "install": {
+                "jps": "${baseUrl}/re-import-ssh-keys.jps",
+                "nodeGroup": "cp",
+                "settings": {
+                    "upload-ssh-keys": "${globals.upload-ssh-keys}"
+                }
+            }
+        },
+        "upload-ssh-keys": {
+            "script": "/scripts/upload-ssh-keys.js"
+        },
+        "no-ssh-keys": {
+            "return": {
+                "type": "success",
+                "message": "/text/engine-success-no-ssh-keys.md",
+                "email": "/text/engine-success-no-ssh-keys.md"
+            }
+        }
+    },
+    "success": {
+        "text": "/text/engine-success.md",
+        "email": "/text/engine-success.md"
+    },
+    "jpsVersion": "1.1"
 }
