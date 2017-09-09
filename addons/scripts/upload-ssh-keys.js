@@ -11,7 +11,7 @@ cmd = [], add = 'echo $key >> ~/.ssh/authorized_keys'
 for (i = 0; i < kl; i++) {
     key = resp.keys[i].publicKey
     cmd.unshift(add)
-    if (key.indexOf('ssh-rsa') == 0) {
+    if (key.indexOf('ssh-rsa') == 0 || key.indexOf('ssh-dss') == 0) {
         cmd.unshift('key=\"' + key + '\"')
     } else {
         cmd.unshift('echo -e \"' + key + '\" > /tmp/key.pub; key=$(ssh-keygen -i -f /tmp/key.pub); rm -f /tmp/key.pub')
