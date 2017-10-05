@@ -1,0 +1,52 @@
+{
+    "jpsType": "update",
+    "id": "portainer",
+    "name": "Portainer UI",
+    "settings": {
+        "fields": [{
+            "type": "list",
+            "name": "mode",
+            "caption": "Mode",
+            "values": {
+                "engine": "Engine",
+                "swarm": "Swarm"
+            },
+            "default": "engine"
+        }]
+    },
+    "globals": {
+        "user": "admin",
+        "password": "${fn.password}"
+    },
+    "onInstall": [{
+        "cmd[cp]": [
+            "mkdir ~/.ssh/certs",
+            "openssl genrsa -out ~/.ssh/certs/portainer.key 2048",
+            "openssl ecparam -genkey -name secp384r1 -out ~/.ssh/certs/portainer.key",
+            "openssl req -new -x509 -sha256 -key ~/.ssh/certs/portainer.key -out ~/.ssh/certs/portainer.crt -days 3650 -subj \"/CN=${env.domain}\""
+        ]
+    }, {
+        "if ('${settings.mode}' == 'engine')": {
+            "cmd[${nodes.cp.first.id}]": [
+                "password=$(htpasswd -nb -B ${globals.user} ${globals.password} | cut -d \":\" -f 2)",
+                "home=$(readlink -f ~)",
+                "volumes=\"-v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data -v $home/.ssh/certs:/certs\"",
+                "portainer=\"portainer/portainer --admin-password $password --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key\"",
+                "docker run -d -p 443:9000 $volumes $portainer"
+            ]
+        }
+    }, {
+        "if ('${settings.mode}' == 'swarm')": {
+            "cmd[${nodes.cp.first.id}]": [
+                "password=$(htpasswd -nb -B ${globals.user} ${globals.password} | cut -d \":\" -f 2)",
+                "home=$(readlink -f ~)",
+                "mkdir -p /opt/portainer",
+                "mount=\"--mount type=bind,src=//var/run/docker.sock,dst=/var/run/docker.sock --mount type=bind,src=/opt/portainer,dst=/data --mount type=bind,src=$home/.ssh/certs,dst=/certs\"",
+                "portainer=\"portainer/portainer -H unix:///var/run/docker.sock --admin-password $password --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key\"",
+                "docker service create --name portainer -p 443:9000 --replicas=1 --constraint 'node.role == manager' $mount $portainer"
+            ]
+        }
+    }],
+    "success": "UI Panel: [https://${env.domain}](https://${env.domain})\n\nUser: ${globals.user}\n\nPassword: ${globals.password}",
+    "email": "UI Panel: [https://${env.domain}](https://${env.domain})\n\nUser: ${globals.user}\n\nPassword: ${globals.password}"
+}
