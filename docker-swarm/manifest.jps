@@ -1,7 +1,7 @@
 {
     "jpsType": "install",
     "id": "docker-swarm-ultra",
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
+    "baseUrl": "https://raw.githubusercontent.com/siruslan/docker-native/master/addons",
     "description": {
         "text": "/text/description-swarm.md",
         "short": "Ultra Scalable Docker Swarm Cluster"
@@ -48,6 +48,11 @@
                     "vtype": "url"
                 }
             }
+        }, {
+            "name": "portainer",
+            "type": "checkbox",
+            "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a>",
+            "value": true
         }]
     },
     "nodes": [{
@@ -70,7 +75,8 @@
         "scaling-triggers",
         "deploy",
         "re-import-button",
-        "get-tokens"
+        "get-tokens",
+        "portainer"
     ],
     "actions": {
         "init-swarm": {
@@ -149,6 +155,16 @@
                 "settings": {
                     "manager_token": "${this.manager}",
                     "worker_token": "${this.worker}"
+                }
+            }
+        },
+        "portainer": {
+            "if (${settings.portainer})": {
+                "install": {
+                    "jps": "${baseUrl}/portainer.jps",
+                    "settings": {
+                        "mode": "swarm"
+                    }
                 }
             }
         }
