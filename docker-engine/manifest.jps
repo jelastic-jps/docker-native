@@ -4,29 +4,22 @@
     "baseUrl": "https://raw.githubusercontent.com/siruslan/docker-native/master/addons",
     "description": {
         "text": "/text/description-engine.md",
-        "short": "Docker Standalone Engine"
+        "short": "Docker Engine CE"
     },
     "logo": "../images/docker-engine-logo.png",
-    "name": "Docker Engine",
+    "name": "Docker Engine CE",
     "region": "vz7",
     "globals": {
         "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
     },
     "settings": {
         "fields": [{
-            "type": "spinner",
-            "name": "nodes",
-            "caption": "Nodes",
-            "min": 1,
-            "max": 10,
-            "default": 1
-        }, {
             "name": "mode",
             "type": "radio-fieldset",
             "values": {
-                "clean": "Clean Engine",
-                "deploy": "Deploy Compose YML",
-                "swarm": "Connect to Swarm"
+                "clean": "Create a clean standalone engine",
+                "deploy": "Deploy containers from compose.yml",
+                "swarm-join": "Connect to an existing swarm cluster"
             },
             "default": "clean",
             "showIf": {
@@ -38,7 +31,7 @@
                     "required": true,
                     "vtype": "url"
                 },
-                "swarm": [{
+                "swarm-join": [{
                     "name": "token",
                     "type": "string",
                     "caption": "Join Token ",
@@ -52,17 +45,18 @@
                     "required": true,
                     "regex": "^(?=\\d+\\.\\d+\\.\\d+\\.\\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.?){4}$",
                     "regexText": "Invalid IP address format"
-                }]
+                }],
+                "clean": {
+                    "name": "portainer",
+                    "type": "checkbox",
+                    "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management",
+                    "value": false
+                }
             }
-        }, {
-            "name": "portainer",
-            "type": "checkbox",
-            "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a>",
-            "value": true
         }]
     },
     "nodes": [{
-        "count": "${settings.nodes}",
+        "count": "1",
         "cloudlets": 32,
         "image": "jelastic/docker-ce-compose",
         "nodeGroup": "cp",
@@ -89,7 +83,7 @@
             }
         },
         "connect-to-swarm": {
-            "if ('${settings.mode}' == 'swarm')": [{
+            "if ('${settings.mode}' == 'swarm-join')": [{
                 "sleep": "10000"
             }, {
                 "cmd[cp]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
@@ -112,16 +106,6 @@
                 "type": "success",
                 "message": "/text/engine-success-no-ssh-keys.md",
                 "email": "/text/engine-success-no-ssh-keys.md"
-            }
-        },
-        "portainer": {
-            "if (${settings.portainer})": {
-                "install": {
-                    "jps": "${baseUrl}/portainer.jps",
-                    "settings": {
-                        "mode": "engine"
-                    }
-                }
             }
         }
     },
