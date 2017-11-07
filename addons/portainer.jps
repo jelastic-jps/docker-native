@@ -47,6 +47,6 @@
             ]
         }
     }],
-    "success": "Portainer UI: [https://${env.domain}](https://${env.domain}) \nUser: ${globals.user} \nPassword: ${globals.password}",
-    "email": "Portainer UI: [https://${env.domain}](https://${env.domain}) \nUser: ${globals.user} \nPassword: ${globals.password}"
+    "success": "Portainer UI: [https://${env.domain}](https://${env.domain})]\n\nUser: ${globals.user}\n\nPassword: ${globals.password}",
+    "email": "Portainer UI: [https://${env.domain}](https://${env.domain})\n\nUser: ${globals.user}\n\nPassword: ${globals.password}"
 }
