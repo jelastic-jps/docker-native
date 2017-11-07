@@ -58,7 +58,7 @@
     "nodes": [{
         "count": "1",
         "cloudlets": 32,
-        "image": "jelastic/docker-ce-compose",
+        "image": "jelastic/docker-ce",
         "nodeGroup": "cp",
         "displayName": "Engine Node",
         "extip": "true"
@@ -109,7 +109,7 @@
             }
         },
         "portainer": {
-            "if (${settings.portainer})": {
+            "if ('${settings.portainer}' == 'true')": {
                 "install": {
                     "jps": "${baseUrl}/portainer.jps",
                     "settings": {
