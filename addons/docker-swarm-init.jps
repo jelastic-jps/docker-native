@@ -9,7 +9,7 @@
     {
       "cmd[${nodes.cp.first.id}]": [
         "docker swarm leave --force &>> /var/log/run.log",
-        "docker swarm init --advertise-addr ${nodes.cp.first.extIPs[0]}"
+        "docker swarm init --advertise-addr ${nodes.cp.first.extIPs[0]} >> /var/log/run.log"
       ]
     }
   ]
