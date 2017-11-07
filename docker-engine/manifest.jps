@@ -6,7 +6,7 @@
         "text": "/text/description-engine.md",
         "short": "Docker Engine CE"
     },
-    "logo": "../images/docker-engine-logo.png",
+    "logo": "../images/docker-engine-logo-94x70.png",
     "name": "Docker Engine CE",
     "region": "vz7",
     "globals": {
