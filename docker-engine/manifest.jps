@@ -1,6 +1,6 @@
 {
     "jpsType": "install",
-    "id": "docker-engine",
+    "id": "docker-engine-ce",
     "baseUrl": "https://raw.githubusercontent.com/siruslan/docker-native/master/addons",
     "description": {
         "text": "/text/description-engine.md",
@@ -106,6 +106,16 @@
                 "type": "success",
                 "message": "/text/engine-success-no-ssh-keys.md",
                 "email": "/text/engine-success-no-ssh-keys.md"
+            }
+        },
+        "portainer": {
+            "if (${settings.portainer})": {
+                "install": {
+                    "jps": "${baseUrl}/portainer.jps",
+                    "settings": {
+                        "mode": "engine"
+                    }
+                }
             }
         }
     },
