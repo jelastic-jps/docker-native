@@ -76,7 +76,7 @@
     "connectNode": {
       "cmd[${this.id}]": [
         "docker swarm leave --force &>> /var/log/run.log",
-        "docker swarm join --token ${this.token} ${nodes.cp.first.intIP}:2377"
+        "docker swarm join --token ${this.token} ${nodes.cp.first.intIP}:2377 >> /var/log/run.log"
       ]
     },
     "removeNode": [

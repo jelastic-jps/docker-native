@@ -1,13 +1,13 @@
 {
     "jpsType": "install",
-    "id": "docker-swarm-ultra",
+    "id": "docker-swarm-ce",
     "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "description": {
         "text": "/text/description-swarm.md",
-        "short": "Ultra Scalable Docker Swarm Cluster"
+        "short": "Docker Swarm Cluster"
     },
-    "logo": "../images/docker-swarm-logo.png",
-    "name": "Docker Swarm",
+    "logo": "../images/docker-swarm-logo-89x70.png",
+    "name": "Docker Swarm Cluster",
     "region": "vz7",
     "globals": {
         "connect-node": "${baseUrl}/scripts/connect-swarm-node.js",
@@ -46,6 +46,12 @@
                     "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml",
                     "required": true,
                     "vtype": "url"
+                },
+                "clean": {
+                    "name": "portainer",
+                    "type": "checkbox",
+                    "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management",
+                    "value": false
                 }
             }
         }]
@@ -70,7 +76,8 @@
         "scaling-triggers",
         "deploy",
         "re-import-button",
-        "get-tokens"
+        "get-tokens",
+        "portainer"
     ],
     "actions": {
         "init-swarm": {
@@ -149,6 +156,16 @@
                 "settings": {
                     "manager_token": "${this.manager}",
                     "worker_token": "${this.worker}"
+                }
+            }
+        },
+        "portainer": {
+            "if ('${settings.portainer}' == 'true')": {
+                "install": {
+                    "jps": "${baseUrl}/portainer.jps",
+                    "settings": {
+                        "mode": "swarm"
+                    }
                 }
             }
         }

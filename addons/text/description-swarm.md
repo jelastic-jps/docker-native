@@ -1,6 +1,1 @@
-### Ultra Scalable Docker Swarm Cluster
-```
-docker swarm init; docker-machine create; docker stack deploy
-```
-
-NOTE: You must [add SSH keys](https://docs.jelastic.com/ssh-add-key) in advance to be able to work via docker-machine
+Use this package to perform *docker stack deploy*. For using *docker-machine*, please ensure your Jelastic account has valid [public SSH keys](https://docs.jelastic.com/ssh-add-key) attached before running the installation. For *docker build*, *docker run* and *docker-compose*, use standalone Docker Engine from the [dedicated package](https://github.com/jelastic-jps/docker-native/tree/master/docker-engine).
