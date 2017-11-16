@@ -42,20 +42,45 @@ Click **Install** and wait a few minutes for Jelastic to automatically perform a
 
 ## Connecting to Docker Engine
 
-After the successful installation, your Docker Engine can be accessed in two ways for further management:
+The Docker Engine package is provided with several default ways it can be connected and managed:
 
-* by establishing remote connection with [Docker machine](https://docs.docker.com/machine/overview/) and generic driver - execute the appropriate commands from the installation success frame (this info is also duplicated via email) to _Create remote connection_ and _Connect to the environment_: 
+### Portainer UI
 
-  ![Docker Swarm Remote Connection](/images/docker-engine-remote-connect.png)
+In case you’ve defined to install the Portainer UI when setting up a bare Engine instance, the appropriate management panel can be accessed by simply opening your environment URL in a browser through HTTPS. 
 
-* through Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account and enter the appropriate node to start working
+![Docker Engine Portainer UI](/images/docker-engine-portainer-ui.png)
 
-  ![Docker Swarm SSH Connection](/images/docker-engine-ssh-connect.png)
+
+> **Note:** By default, connection to Portainer is secured with a [self-signed SSL certificate](https://docs.jelastic.com/self-signed-ssl), thus you might be shown the warning that it’s not trusted by your browser. This does not actually affects the Portainer functionality - you just need to confirm you do want to access the requested page. 
+> 
+> ![Docker Engine Self-Signed SSL Warning](/images/docker-engine-self-signed-ssl-warning.png)
+> 
+> The required for that actions could differ depending on a used browser - for example, in Google Chrome you’ll need to expand the **Advanced** section and click on the _Proceed to {env_URL}_ link.
+
+The appropriate authentication credentials to enter the Portainer itself can be found within the corresponding email notification you’ve received during the Engine server creation.
+
+
+### SSH Gate
+
+To start working over Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account, choose your Docker Engine environment and enter the required server/container.
+
+![Docker Engine SSH Connect](/images/docker-engine-ssh-connect.png)
+
+### Docker Machine
+
+Another way of access is establishing the remote container connection through [Docker machine](https://docs.docker.com/machine/overview/) and generic driver. For that, execute the appropriate commands from the _Create remote connection_ and _Connect to the environment_ sections, provisioned within the solution installation success frame (also, you can find this data within your email box):
+
+![Docker Engine Remote Connect](/images/docker-engine-remote-connect.png)
+
+> **Note:** In case your private SSH key has custom name or location (i.e. path to it differs from the default _~/.ssh/id_rsa_ one), you need to adjust the appropriate value within the _Create remote connection_ command.
+> 
+> Also, the created server is automatically supplied with a special **Add-on**, which allows to _**Re-import**_ the newly added public SSH keys from your Platform account into Docker Engine node, allowing to establish the _docker machine_ connection with new authentication parameters:
+> 
+> ![Docker Engine Reimport SSH Keys](/images/docker-engine-reimport-ssh-keys.png)
 
 ## Requirements
 
 Before installing the package, please consider the following points:
-
-* For Docker Engine server creation, the appropriate Platform should run Jelastic 5.0.5 version with the Native Dockers support enabled. This feature availability depends on a cluster administrator - you can search for a suitable provider within the [Jelastic Cloud Union](https://jelastic.cloud/?versions=5.0) catalog.
+* The appropriate Platform should run Jelastic of [5.2 version or later](https://jelastic.cloud/?versions=5.3_5.2) with the Native Dockers support enabled (i.e. it should contain an [environment region](https://docs.jelastic.com/environment-regions) with [Virtuozzo 7](https://virtuozzo.com/products/virtuozzo/) virtualization being integrated - the appropriate hardware set name(s) could be found within the dedicated column of the [Jelastic Hosting Providers](https://docs.jelastic.com/jelastic-hoster-info) list).
+* In order to be successfully installed, the Docker Engine requires a [public SSH key](https://docs.jelastic.com/ssh-add-key) being added to your Jelastic account (whilst the corresponding private key should be handled at your local machine).
 * The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is provided for billing users only, thus you need to convert your account beforehand.
-* In order to be successfully installed, the current Docker Engine solution also requires a [public SSH key](https://docs.jelastic.com/ssh-add-key) being attached to your Jelastic account (with the corresponding private key handled at your local machine for further connection to the server). 
