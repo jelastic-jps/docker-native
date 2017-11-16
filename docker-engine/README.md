@@ -25,15 +25,15 @@ Here, you need to provide some details on the desired Docker Engine environment 
 * choose the preferred installation type
   * _**Create a clean standalone engine**_ - to create a bare node with just a Docker daemon run inside; optionally, you could tick the **Install Portainer UI** option to install the same-named web-based Engine management tool
 
-![Docker Engine Standalone](/images/docker-engine-standalone.png)
+    ![Docker Engine Standalone](/images/docker-engine-standalone.png)
 
   * _**Connect to an existing swarm cluster**_ - to automatically include the newly created Docker Engine container into the existing Docker Swarm cluster (with either Manager or Worker role) through providing the appropriate cluster _Join Token_ and _Host IP_
 
-![Docker Engine Connect Swarm](/images/docker-engine-connect-swarm.png)
+    ![Docker Engine Connect Swarm](/images/docker-engine-connect-swarm.png)
 
   * _**Deploy containers from compose.yml**_ - to automatically deploy application from the specified custom repository
 
-![Docker Engine Deploy](/images/docker-engine-deploy.png)
+    ![Docker Engine Deploy](/images/docker-engine-deploy.png)
 
 * **Environment** - type a name for your environment
 * **Display Name** - optionally, specify an [environment alias](https://docs.jelastic.com/environment-aliases)
