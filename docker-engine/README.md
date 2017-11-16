@@ -6,12 +6,13 @@ The package for the automatic installation of Docker Engine (CE) as a standalone
 
 ## What is Docker Engine Package
 
-The **Docker Engine** package by Jelastic creates an [isolated worker node](https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/) with the Docker Community Edition (CE) engine being run inside, which is someway similar to launching it within a separate virtual machine (VM). Herewith, the Platform additionally provides [automatic vertical scaling](https://docs.jelastic.com/automatic-vertical-scaling) for all such worker nodes and allows paying only for the actually used capacities. 
+The **Docker Engine** package by Jelastic creates an [isolated worker node](https://docs.docker.com/engine/swarm/how-swarm-mode-works/nodes/) with the Docker Community Edition (CE) engine being run inside, which is someway similar to launching it within a separate virtual machine (VM). Herewith, the Platform additionally provides [automatic vertical scaling](https://docs.jelastic.com/automatic-vertical-scaling) for all such worker nodes, allowing to pay only for the actually used capacities regardless of the stated resources limits. 
 
-Upon this package installation, you can choose among several Docker Engine deployment modes to run it as either:
-* _a standalone bare node_ - to set up a separate ‘clean’ Docker Engine (with possibility to automatically install Portainer management GUI)
-* _a automatic application deployment_ - to install standalone Docker Engine node with the required Docker service already launched (through the compose file)
-* _a swarm member_ - to connect to the already existing Docker Swarm cluster as _Manager_ or _Worker_ node (the appropriate _[join tokens](https://docs.docker.com/engine/swarm/join-nodes/#join-as-a-worker-node)_ is required)
+The current solution proposes several deployment options, allowing to run a new Engine server as either:
+* _a standalone ‘clean’ Docker container_ with an optional Portainer management GUI integration
+* _a node with pre-deployed application_, which is automatically installed just upon an instance creation based on the specified compose file
+* _a swarm member_, providing an automatic node’s integration to the already existing Docker Swarm cluster using the appropriate _[join token](https://docs.docker.com/engine/swarm/join-nodes/#join-as-a-worker-node)_ hash
+
 
 ## Docker Engine Installation
 
@@ -19,11 +20,11 @@ Log into your Jelastic account and [import](https://docs.jelastic.com/environmen
 
 ![Docker Engine Installation](/images/docker-engine-installation.png)
 
-> **Note:** Docker Engine container is automatically provisioned with a [Public IP](http://docs.jelastic.com/public-ipv4) address to allow remote access to it via _docker-machine_.
+> **Note:** Every Docker Engine container is automatically provisioned with a [Public IP](http://docs.jelastic.com/public-ipv4) address to allow accessing it remotely via _docker-machine_.
 
 Here, you need to provide some details on the desired Docker Engine environment parameters:
 * choose the preferred installation type
-  * _**Create a clean standalone engine**_ - to create a bare node with just a Docker daemon run inside; optionally, you could tick the **Install Portainer UI** option to install the same-named web-based Engine management tool
+  * _**Create a clean standalone engine**_ - to integrate the newly created Engine container into the already run Docker Swarm with either _Manager_ or _Worker_ role, through providing the appropriate cluster _Join Token_ and _Host IP_
 
     ![Docker Engine Standalone](/images/docker-engine-standalone.png)
 
@@ -31,18 +32,18 @@ Here, you need to provide some details on the desired Docker Engine environment 
 
     ![Docker Engine Connect Swarm](/images/docker-engine-connect-swarm.png)
 
-  * _**Deploy containers from compose.yml**_ - to automatically deploy application from the specified custom repository
+  * _**Deploy containers from compose.yml**_ - to set up an engine node with the automatically deployed application from the specified custom repository
 
     ![Docker Engine Deploy](/images/docker-engine-deploy.png)
 
 * **Environment** - type a name for your environment
-* **Display Name** - optionally, specify an [environment alias](https://docs.jelastic.com/environment-aliases)
+* **Display Name** - optionally, specify an [environment alias](https://docs.jelastic.com/environment-aliases) for its better differentiation within the Jelastic dashboard and [SSH Gate](https://docs.jelastic.com/ssh-gate)
 
 Click **Install** and wait a few minutes for Jelastic to automatically perform all the required configurations.
 
 ## Connecting to Docker Engine
 
-The Docker Engine package is provided with several default ways it can be connected and managed:
+The Docker Engine container is provided with several default ways it can be connected and managed:
 
 ### Portainer UI
 
