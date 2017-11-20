@@ -2,7 +2,7 @@
 
 # Docker Engine
 
-The package for the automatic installation of Docker Engine (CE) as a standalone node or a swarm member.
+The package for automatic installation of Docker Engine (CE) as a standalone node or a swarm member.
 
 ## What is Docker Engine Package
 
@@ -41,9 +41,9 @@ Here, you need to provide some details on the desired Docker Engine environment 
 
 Click **Install** and wait a few minutes for Jelastic to automatically perform all the required configurations.
 
-## Connecting to Docker Engine
+## Operating with Your Docker Engine Node
 
-The Docker Engine container is provided with several default ways it can be connected and managed:
+The Docker Engine node could be connected to and managed in the following ways, available by default:
 
 ### Portainer UI
 
@@ -63,7 +63,7 @@ The appropriate authentication credentials to enter the Portainer itself can be 
 
 ### SSH Gate
 
-To start working over Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account, choose your Docker Engine environment and enter the required server/container.
+To start working over Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account, choose an environment with your Docker Engine node and refer to the appropriate topology layer & container.
 
 ![Docker Engine SSH Connect](/images/docker-engine-ssh-connect.png)
 
