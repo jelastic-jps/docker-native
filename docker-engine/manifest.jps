@@ -4,7 +4,7 @@
     "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "description": {
         "text": "/text/description-engine.md",
-        "short": "Docker Engine CE"
+        "short": "Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node"
     },
     "logo": "../images/docker-engine-logo-94x70.png",
     "name": "Docker Engine CE",

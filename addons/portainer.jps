@@ -32,7 +32,7 @@
                 "home=$(readlink -f ~)",
                 "volumes=\"-v /var/run/docker.sock:/var/run/docker.sock -v /opt/portainer:/data -v $home/.ssh/certs:/certs\"",
                 "portainer=\"portainer/portainer --admin-password $password --ssl --sslcert /certs/portainer.crt --sslkey /certs/portainer.key\"",
-                "docker run -d -p 443:9000 $volumes $portainer"
+                "docker run -d -p 443:9000 --restart always $volumes $portainer"
             ]
         }
     }, {
