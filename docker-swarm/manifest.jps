@@ -62,13 +62,19 @@
         "image": "jelastic/docker-ce",
         "nodeGroup": "cp",
         "displayName": "Manager",
-        "extip": "true"
+        "extip": "true",
+        "env": {
+            "JELASTIC_EXPOSE": false
+        }
     }, {
         "count": "${settings.worker}",
         "nodeGroup": "worker",
         "image": "jelastic/docker-ce",
         "displayName": "Worker",
-        "cloudlets": 32
+        "cloudlets": 32,
+        "env": {
+            "JELASTIC_EXPOSE": false
+        }
     }],
     "onInstall": [
         "init-swarm",
