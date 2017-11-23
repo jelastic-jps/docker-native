@@ -61,7 +61,10 @@
         "image": "jelastic/docker-ce",
         "nodeGroup": "cp",
         "displayName": "Engine Node",
-        "extip": "true"
+        "extip": "true",
+        "env": {
+            "JELASTIC_EXPOSE": false
+        }
     }],
     "onInstall": [
         "deploy",
