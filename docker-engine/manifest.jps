@@ -8,7 +8,6 @@
     },
     "logo": "../images/docker-engine-logo-94x70.png",
     "name": "Docker Engine CE",
-    "region": "vz7",
     "globals": {
         "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
     },
