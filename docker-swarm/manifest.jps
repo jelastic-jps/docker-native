@@ -4,7 +4,7 @@
     "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "description": {
         "text": "/text/description-swarm.md",
-        "short": "Docker Swarm Cluster"
+        "short": "A set of interconnected Docker Engine nodes with out-of-box auto-clustering and auto-scaling"
     },
     "logo": "../images/docker-swarm-logo-89x70.png",
     "name": "Docker Swarm Cluster",
