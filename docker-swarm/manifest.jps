@@ -22,14 +22,14 @@
             "caption": "Manager",
             "min": 1,
             "max": 10,
-            "default": 3
+            "default": 1
         }, {
             "type": "spinner",
             "name": "worker",
             "caption": "Worker",
             "min": 1,
             "max": 10,
-            "default": 5
+            "default": 3
         }, {
             "name": "stack",
             "type": "radio-fieldset",
