@@ -29,7 +29,7 @@
             "caption": "Worker",
             "min": 1,
             "max": 10,
-            "default": 3
+            "default": 2
         }, {
             "name": "stack",
             "type": "radio-fieldset",
