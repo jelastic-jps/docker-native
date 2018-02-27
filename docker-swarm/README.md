@@ -55,9 +55,9 @@ In case you’ve installed a clean cluster with the Portainer UI, the appropriat
 ![Docker Swarm Portainer Connection](/images/docker-swarm-portainer-connection.png)
 
 > **Note:** By default, connection to Portainer is secured with a [self-signed SSL certificate](https://docs.jelastic.com/self-signed-ssl), thus you might be shown the warning that it’s not trusted by your browser. This does not actually affect the Portainer functionality – you just need to confirm you do want to access the requested page.
-
+> 
 > ![Docker Swarm Portainer SSL](/images/docker-swarm-portainer-ssl.png)
-
+> 
 > The required for that actions could differ depending on a used browser – for example, in Google Chrome you’ll need to expand the **Advanced** section and click on the _Proceed to {env_URL}_ link.
 
 The appropriate authentication credentials to enter the Portainer itself can be found within the corresponding email notification you’ve received during the Docker swarm creation.
@@ -69,7 +69,7 @@ Use Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to 
 ![Docker Swarm SSH Connection](/images/docker-swarm-ssh-connection.png)
 
 > **Tip:** Also, starting with the 5.4 Jelastic release, you can establish an SSH connection to the required container directly via your browser by clicking on the **Web SSH** option next to it at the dashboard.
-
+> 
 > ![Docker Swarm Web SSH](/images/docker-swarm-web-ssh.png)
 
 * ### Docker Machine
@@ -81,7 +81,7 @@ Another way of container access is to establish a remote connection through [Doc
 > **Note:** When [adding SSH keys](https://docs.jelastic.com/ssh-add-key) to your account for further Docker swarm management, please consider the following points:
 > * In case your private SSH key has a custom name or location (i.e. if the path to it differs from the default _~/.ssh/id_rsa_ one), you need to adjust the appropriate value(s) within the _Create remote connection_ command.
 > * The created server is automatically supplied with a special **Add-on**, which allows to _**Re-import**_ the newly added public SSH keys from your Platform account into all Docker swarm nodes at the corresponding layer, allowing to establish the _docker machine_ connection with new authentication parameters:
-
+> 
 > ![Docker Swarm Remote Keys](/images/docker-swarm-remote-keys.png)
 
 ## Requirements
