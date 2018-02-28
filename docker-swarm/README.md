@@ -30,33 +30,64 @@ Here, you need to specify some details to get the cluster you need:
 * **Manager** - number of manager nodes to be included into cluster (with [Public IP](https://docs.jelastic.com/public-ipv4) being automatically attached to each container)
 * **Worker** - number of worker nodes to be included into cluster
 * choose deployment type:
-  - **_Clean Cluster_** - to create a bare cluster and subsequently deploy the required services manually 
-  - **_Deploy Stack YML_** - to instantly deploy the necessary Docker Swarm services with _[docker stack deploy](https://docs.docker.com/engine/reference/commandline/stack_deploy/)_ by specifying link to the appropriate [compose YAML file](https://docs.docker.com/compose/compose-file/):
+  - **_Clean Cluster_** - to create a bare cluster; as an extra option, you can simultaneously install the [Portainer](https://portainer.io/) management UI for convenient operating with a cluster
+
+![Docker Swarm Clean Deploy](/images/docker-swarm-clean-deploy.png)
+
+
+  - **_Deploy Stack YML_** - to perform _[docker stack deploy](https://docs.docker.com/engine/reference/commandline/stack_deploy/)_ alongside with the cluster creation and instantly deploy the required dockerized services by specifying link to the appropriate [compose YML file](https://docs.docker.com/compose/compose-file/):
 
 ![Docker Swarm Deploy](/images/docker-swarm-deploy.png)
 
 * **Environment** - type a name for your environment
-* **Display Name** - optionally, specify [alias](https://docs.jelastic.com/environment-aliases) to be displayed for environment
-* **Region** - choose the preferable [region](https://docs.jelastic.com/environment-regions) from the list (if several options are available)
+* **Display Name** - optional [alias](https://docs.jelastic.com/environment-aliases) to be displayed for environment
 
 Click **Install** and wait a few minutes for Jelastic to automatically perform all the required actions.
 
 ## Docker Swarm Connection
 
-After the successful installation, your cluster can be accessed in two ways for further management:
+After the successful installation, your cluster can be accessed in the following ways for further management:
 
-* by establishing remote connection with [Docker machine](https://docs.docker.com/machine/overview/) and generic driver - execute the appropriate commands from the installation success frame (this info is also duplicated via email) to _Create docker-machine remote connection_ and _Connect to the environment_: 
+* ### Portainer UI
+
+In case you’ve installed a clean cluster with the Portainer UI, the appropriate management panel can be accessed by simply opening any of your manager nodes in a browser through _HTTPS_.  
+
+![Docker Swarm Portainer Connection](/images/docker-swarm-portainer-connection.png)
+
+> **Note:** By default, connection to Portainer is secured with a [self-signed SSL certificate](https://docs.jelastic.com/self-signed-ssl), thus you might be shown the warning that it’s not trusted by your browser. This does not actually affect the Portainer functionality – you just need to confirm you do want to access the requested page.
+> 
+> ![Docker Swarm Portainer SSL](/images/docker-swarm-portainer-ssl.png)
+> 
+> The required for that actions could differ depending on a used browser – for example, in Google Chrome you’ll need to expand the **Advanced** section and click on the _Proceed to {env_URL}_ link.
+
+The appropriate authentication credentials to enter the Portainer itself can be found within the corresponding email notification you’ve received during the Docker swarm creation.
+
+* ### SSH Gate
+
+Use Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account and choose one of the _Manager_ nodes within your Docker swarm environment to start managing the whole cluster.
+
+![Docker Swarm SSH Connection](/images/docker-swarm-ssh-connection.png)
+
+> **Tip:** Also, starting with the 5.4 Jelastic release, you can establish an SSH connection to the required container directly via your browser by clicking on the **Web SSH** option next to it at the dashboard.
+> 
+> ![Docker Swarm Web SSH](/images/docker-swarm-web-ssh.png)
+
+* ### Docker Machine
+
+Another way of container access is to establish a remote connection through [Docker machine](https://docs.docker.com/machine/overview/) and generic driver. For that, execute the appropriate _Create remote connection_ and _Connect to the environment_ commands, provisioned within the solution installation success frame (also, you can find this data within your email box):
 
 ![Docker Swarm Remote Connection](/images/docker-swarm-remote-connection.png)
 
-* through Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account and enter _Manager_ node within your Docker Swarm environment to start working
-
-![Docker Swarm SSH Connection](/images/docker-swarm-ssh-connection.png)
+> **Note:** When [adding SSH keys](https://docs.jelastic.com/ssh-add-key) to your account for further Docker swarm management, please consider the following points:
+> * In case your private SSH key has a custom name or location (i.e. if the path to it differs from the default _~/.ssh/id_rsa_ one), you need to adjust the appropriate value(s) within the _Create remote connection_ command.
+> * The created server is automatically supplied with a special **Add-on**, which allows to _**Re-import**_ the newly added public SSH keys from your Platform account into all Docker swarm nodes at the corresponding layer, allowing to establish the _docker machine_ connection with new authentication parameters:
+> 
+> ![Docker Swarm Remote Keys](/images/docker-swarm-remote-keys.png)
 
 ## Requirements
 
 Before installing the package, please consider the following points:
 
-* For Docker Swarm cluster creation, the appropriate Platform should run Jelastic 5.0.5 version with the Native Dockers support enabled. This feature availability depends on a cluster administrator - you can search for a suitable provider within the [Jelastic Cloud Union](https://jelastic.cloud/?versions=5.0) catalog.
+* The chosen Platform should run Jelastic of [5.2 version or later](https://jelastic.cloud/?versions=5.3_5.2) and contain environment region(s) with native Docker container support enabled (their presence and names could be found within the same-named column of the [Jelastic Hosting Providers](https://docs.jelastic.com/jelastic-hoster-info) list).
 * The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is provided for billing users only, thus you need to convert your account beforehand.
-* In order to be successfully installed, the current Docker Swarm solution also requires a [public SSH key](https://docs.jelastic.com/ssh-add-key) being attached to your Jelastic account (with the corresponding private key handled at your local machine for further connection to the cluster). 
+* In order to be able managing containers by means of [Docker Machine](https://docs.docker.com/machine/overview/), you need to have a [public SSH key](https://docs.jelastic.com/ssh-add-key) being added to your Jelastic account, whilst the corresponding private key from the pair should be handled at your local machine.
