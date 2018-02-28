@@ -19,6 +19,13 @@ var types = [{
     scaleDownLoadPeriod: 5
 }];
 
+var resp = jelastic.billing.account.GetQuotas('environment.maxsamenodescount');
+if (resp.result != 0) return resp;
+nMaxSameNodes = resp.array[0] && resp.array[0] ? resp.value : 1000;
+
+if (nMaxSameNodes < upLimit) upLimit = nMaxSameNodes;
+if (upLimit <= downLimit) downLimit = upLimit - 1;
+
 var cleanOldTriggers = true;
 
 if (cleanOldTriggers) {
