@@ -3,7 +3,7 @@
     "id": "docker-swarm-autoscaling",
     "name": "Swarm Autoscaling",
     "globals": {
-        "script": "${baseUrl}/scripts/autoscaling-triggers.js"
+        "script": "${baseUrl}/scripts/autoscaling-triggers.js?_r=${fn.random}"
     },
     "onInstall": [{
         "script": "${globals.script}",
