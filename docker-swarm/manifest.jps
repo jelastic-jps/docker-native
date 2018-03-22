@@ -10,10 +10,10 @@
     "name": "Docker Swarm Cluster",
     "region": "vz7",
     "globals": {
-        "connect-node": "${baseUrl}/scripts/connect-swarm-node.js",
-        "update-tokens": "${baseUrl}/scripts/update-swarm-tokens.js",
-        "get-tokens": "${baseUrl}/scripts/get-swarm-tokens.js",
-        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
+        "connect-node": "${baseUrl}/scripts/connect-swarm-node.js?_r=${fn.random}",
+        "update-tokens": "${baseUrl}/scripts/update-swarm-tokens.js?_r=${fn.random}",
+        "get-tokens": "${baseUrl}/scripts/get-swarm-tokens.js?_r=${fn.random}",
+        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}"
     },
     "settings": {
         "fields": [{
@@ -87,11 +87,11 @@
     ],
     "actions": {
         "init-swarm": {
-            "install": "${baseUrl}/docker-swarm-init.jps"
+            "install": "${baseUrl}/docker-swarm-init.jps?_r=${fn.random}"
         },
         "scaling-events": {
             "install": {
-                "jps": "${baseUrl}/docker-swarm-scaling.jps",
+                "jps": "${baseUrl}/docker-swarm-scaling.jps?_r=${fn.random}",
                 "settings": {
                     "baseUrl": "${baseUrl}",
                     "connect-node": "${globals.connect-node}",
@@ -102,7 +102,7 @@
         },
         "scaling-triggers": {
             "install": {
-                "jps": "${baseUrl}/autoscaling-triggers.jps",
+                "jps": "${baseUrl}/autoscaling-triggers.jps?_r=${fn.random}",
                 "settings": {
                     "mngr": "${settings.mngr}",
                     "worker": "${settings.worker}"
@@ -112,7 +112,7 @@
         "deploy": {
             "if ('${settings.stack}' == 'deploy')": {
                 "install": {
-                    "jps": "${baseUrl}/docker-deploy.jps",
+                    "jps": "${baseUrl}/docker-deploy.jps?_r=${fn.random}",
                     "settings": {
                         "yml": "${settings.yml}",
                         "type": "stack"
@@ -122,7 +122,7 @@
         },
         "re-import-button": {
             "install": {
-                "jps": "${baseUrl}/re-import-ssh-keys.jps",
+                "jps": "${baseUrl}/re-import-ssh-keys.jps?_r=${fn.random}",
                 "nodeGroup": "cp",
                 "settings": {
                     "upload-ssh-keys": "${globals.upload-ssh-keys}"
@@ -168,7 +168,7 @@
         "portainer": {
             "if ('${settings.portainer}' == 'true')": {
                 "install": {
-                    "jps": "${baseUrl}/portainer.jps",
+                    "jps": "${baseUrl}/portainer.jps?_r=${fn.random}",
                     "settings": {
                         "mode": "swarm"
                     }

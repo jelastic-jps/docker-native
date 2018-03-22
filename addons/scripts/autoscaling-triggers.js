@@ -1,6 +1,13 @@
 //@req(nodeGroup, upLimit, downLimit)
 var envName = "${env.envName}";
 
+var resp = jelastic.billing.account.GetQuotas('environment.maxsamenodescount');
+if (resp.result != 0) return resp;
+nMaxSameNodes = resp.array[0] && resp.array[0].value ? resp.array[0].value : 1000;
+
+if (nMaxSameNodes < upLimit) upLimit = nMaxSameNodes;
+if (upLimit <= downLimit) return {result:0, warning: 'autoscaling triggers have not been added due to upLimit ['+upLimit+'] <= downLimit ['+downLimit+']'}
+
 var types = [{
     resourceType: "MEM",
     scaleUpValue: 70,
