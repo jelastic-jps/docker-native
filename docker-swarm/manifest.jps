@@ -1,7 +1,7 @@
 {
     "jpsType": "install",
     "id": "docker-swarm-ce",
-    "baseUrl": "https://raw.githubusercontent.com/siruslan/docker-native/master/addons",
+    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
     "description": {
         "text": "/text/description-swarm.md",
         "short": "A set of interconnected Docker Engine nodes with out-of-box auto-clustering and auto-scaling"
