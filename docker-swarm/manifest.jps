@@ -6,6 +6,10 @@
         "text": "/text/description-swarm.md",
         "short": "A set of interconnected Docker Engine nodes with out-of-box auto-clustering and auto-scaling"
     },
+    "categories": [
+		"apps/popular",
+		"apps/clusters"
+	],
     "logo": "../images/docker-swarm-logo-89x70.png",
     "name": "Docker Swarm Cluster",
     "region": "vz7",
