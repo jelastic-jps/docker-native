@@ -8,7 +8,8 @@
     },
     "categories": [
 		"apps/popular",
-		"apps/clusters"
+		"apps/clusters",
+		"apps/dev-and-admin-tools"
 	],
     "logo": "../images/docker-swarm-logo-89x70.png",
     "name": "Docker Swarm Cluster",
