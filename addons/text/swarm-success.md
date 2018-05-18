@@ -18,7 +18,7 @@ docker swarm join \
 ${nodes.cp.first.extIPs[0]}:2377
 ```
 
-### Add a Woker node to the cluster
+### Add a Worker node to the cluster
 ```
 docker swarm join \
 --token {WORKER} \
