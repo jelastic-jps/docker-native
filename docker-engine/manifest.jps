@@ -6,8 +6,15 @@
         "text": "/text/description-engine.md",
         "short": "Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node"
     },
+    "categories": [
+		"apps/popular",
+		"apps/clusters"
+	],
     "logo": "../images/docker-engine-logo-94x70.png",
     "name": "Docker Engine CE",
+    "targetRegions": {
+        "type": "vz7"
+    },
     "region": "vz7",    
     "globals": {
         "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"

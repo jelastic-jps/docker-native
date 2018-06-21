@@ -1,3 +1,10 @@
+import com.hivext.api.core.utils.Transport;
+
+//reading script from URL
+var scriptBody = new Transport().get("${baseUrl}/text/swarm-success.md?_r=${fn.random}");
+scriptBody = scriptBody.replace("{MANAGER}", "${this.manager}");
+scriptBody = scriptBody.replace("{WORKER}", "${this.worker}");
+
 resp = jelastic.users.account.GetSSHKeys(appid, session, false)
 if (resp.result != 0 || resp.keys == null) return resp
 kl = resp.keys.length
@@ -19,8 +26,15 @@ for (i = 0; i < kl; i++) {
 }
 
 return {
-    result: 0,
-    onAfterReturn: {
-        'cmd[cp,worker]': cmd
-    }
+  "result": 0,
+  "onAfterReturn": [{
+      "cmd[cp,worker]": cmd
+    },
+    {
+      "return": {
+        "type": "success",
+        "message": scriptBody,
+        "email": scriptBody
+      }
+    }]
 }

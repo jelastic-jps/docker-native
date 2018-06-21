@@ -1,180 +1,177 @@
 {
-    "jpsType": "install",
-    "id": "docker-swarm-ce",
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
-    "description": {
-        "text": "/text/description-swarm.md",
-        "short": "A set of interconnected Docker Engine nodes with out-of-box auto-clustering and auto-scaling"
+  "jpsType": "install",
+  "id": "docker-swarm-ce",
+  "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
+  "description": {
+    "text": "/text/description-swarm.md",
+    "short": "A set of interconnected Docker Engine nodes with out-of-box auto-clustering and auto-scaling"
+  },
+  "categories": [
+    "apps/popular",
+    "apps/clusters",
+    "apps/dev-and-admin-tools"
+  ],
+  "logo": "../images/docker-swarm-logo-89x70.png",
+  "name": "Docker Swarm Cluster",
+  "targetRegions": {
+    "type": "vz7"
+  },
+  "region": "vz7",
+  "globals": {
+    "connect-node": "${baseUrl}/scripts/connect-swarm-node.js?_r=${fn.random}",
+    "update-tokens": "${baseUrl}/scripts/update-swarm-tokens.js?_r=${fn.random}",
+    "get-tokens": "${baseUrl}/scripts/get-swarm-tokens.js?_r=${fn.random}",
+    "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}"
+  },
+  "settings": {
+    "fields": [
+      {
+        "type": "spinner",
+        "name": "mngr",
+        "caption": "Manager",
+        "min": 1,
+        "max": 10,
+        "default": 1
+      },
+      {
+        "type": "spinner",
+        "name": "worker",
+        "caption": "Worker",
+        "min": 1,
+        "max": 10,
+        "default": 2
+      },
+      {
+        "name": "stack",
+        "type": "radio-fieldset",
+        "values": {
+          "clean": "Clean Cluster",
+          "deploy": "Deploy Stack YML"
+        },
+        "default": "clean",
+        "showIf": {
+          "deploy": {
+            "name": "yml",
+            "type": "string",
+            "caption": "Stack YML URL",
+            "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml",
+            "required": true,
+            "vtype": "url"
+          },
+          "clean": {
+            "name": "portainer",
+            "type": "checkbox",
+            "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management",
+            "value": false
+          }
+        }
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "count": "${settings.mngr}",
+      "cloudlets": 32,
+      "image": "jelastic/docker-ce",
+      "nodeGroup": "cp",
+      "displayName": "Manager",
+      "extip": "true",
+      "env": {
+        "JELASTIC_EXPOSE": false
+      }
     },
-    "logo": "../images/docker-swarm-logo-89x70.png",
-    "name": "Docker Swarm Cluster",
-    "region": "vz7",
-    "globals": {
-        "connect-node": "${baseUrl}/scripts/connect-swarm-node.js?_r=${fn.random}",
-        "update-tokens": "${baseUrl}/scripts/update-swarm-tokens.js?_r=${fn.random}",
-        "get-tokens": "${baseUrl}/scripts/get-swarm-tokens.js?_r=${fn.random}",
-        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}"
+    {
+      "count": "${settings.worker}",
+      "nodeGroup": "worker",
+      "image": "jelastic/docker-ce",
+      "displayName": "Worker",
+      "cloudlets": 32,
+      "env": {
+        "JELASTIC_EXPOSE": false
+      }
+    }
+  ],
+  "onInstall": [
+    "init-swarm",
+    "scaling-events",
+    "scaling-triggers",
+    "deploy",
+    "re-import-button",
+    "portainer",
+    "get-tokens"
+  ],
+  "actions": {
+    "init-swarm": {
+      "install": "${baseUrl}/docker-swarm-init.jps?_r=${fn.random}"
     },
-    "settings": {
-        "fields": [{
-            "type": "spinner",
-            "name": "mngr",
-            "caption": "Manager",
-            "min": 1,
-            "max": 10,
-            "default": 1
-        }, {
-            "type": "spinner",
-            "name": "worker",
-            "caption": "Worker",
-            "min": 1,
-            "max": 10,
-            "default": 2
-        }, {
-            "name": "stack",
-            "type": "radio-fieldset",
-            "values": {
-                "clean": "Clean Cluster",
-                "deploy": "Deploy Stack YML"
-            },
-            "default": "clean",
-            "showIf": {
-                "deploy": {
-                    "name": "yml",
-                    "type": "string",
-                    "caption": "Stack YML URL",
-                    "default": "https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml",
-                    "required": true,
-                    "vtype": "url"
-                },
-                "clean": {
-                    "name": "portainer",
-                    "type": "checkbox",
-                    "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management",
-                    "value": false
-                }
-            }
-        }]
+    "scaling-events": {
+      "install": {
+        "jps": "${baseUrl}/docker-swarm-scaling.jps?_r=${fn.random}",
+        "settings": {
+          "baseUrl": "${baseUrl}",
+          "connect-node": "${globals.connect-node}",
+          "update-tokens": "${globals.update-tokens}",
+          "get-tokens": "${globals.get-tokens}"
+        }
+      }
     },
-    "nodes": [{
-        "count": "${settings.mngr}",
-        "cloudlets": 32,
-        "image": "jelastic/docker-ce",
+    "scaling-triggers": {
+      "install": {
+        "jps": "${baseUrl}/autoscaling-triggers.jps?_r=${fn.random}",
+        "settings": {
+          "mngr": "${settings.mngr}",
+          "worker": "${settings.worker}"
+        }
+      }
+    },
+    "deploy": {
+      "if ('${settings.stack}' == 'deploy')": {
+        "install": {
+          "jps": "${baseUrl}/docker-deploy.jps?_r=${fn.random}",
+          "settings": {
+            "yml": "${settings.yml}",
+            "type": "stack"
+          }
+        }
+      }
+    },
+    "re-import-button": {
+      "install": {
+        "jps": "${baseUrl}/re-import-ssh-keys.jps?_r=${fn.random}",
         "nodeGroup": "cp",
-        "displayName": "Manager",
-        "extip": "true",
-        "env": {
-            "JELASTIC_EXPOSE": false
+        "settings": {
+          "upload-ssh-keys": "${globals.upload-ssh-keys}"
         }
-    }, {
-        "count": "${settings.worker}",
-        "nodeGroup": "worker",
-        "image": "jelastic/docker-ce",
-        "displayName": "Worker",
-        "cloudlets": 32,
-        "env": {
-            "JELASTIC_EXPOSE": false
-        }
-    }],
-    "onInstall": [
-        "init-swarm",
-        "scaling-events",
-        "scaling-triggers",
-        "deploy",
-        "re-import-button",
-        "get-tokens",
-        "portainer"
-    ],
-    "actions": {
-        "init-swarm": {
-            "install": "${baseUrl}/docker-swarm-init.jps?_r=${fn.random}"
-        },
-        "scaling-events": {
-            "install": {
-                "jps": "${baseUrl}/docker-swarm-scaling.jps?_r=${fn.random}",
-                "settings": {
-                    "baseUrl": "${baseUrl}",
-                    "connect-node": "${globals.connect-node}",
-                    "update-tokens": "${globals.update-tokens}",
-                    "get-tokens": "${globals.get-tokens}"
-                }
-            }
-        },
-        "scaling-triggers": {
-            "install": {
-                "jps": "${baseUrl}/autoscaling-triggers.jps?_r=${fn.random}",
-                "settings": {
-                    "mngr": "${settings.mngr}",
-                    "worker": "${settings.worker}"
-                }
-            }
-        },
-        "deploy": {
-            "if ('${settings.stack}' == 'deploy')": {
-                "install": {
-                    "jps": "${baseUrl}/docker-deploy.jps?_r=${fn.random}",
-                    "settings": {
-                        "yml": "${settings.yml}",
-                        "type": "stack"
-                    }
-                }
-            }
-        },
-        "re-import-button": {
-            "install": {
-                "jps": "${baseUrl}/re-import-ssh-keys.jps?_r=${fn.random}",
-                "nodeGroup": "cp",
-                "settings": {
-                    "upload-ssh-keys": "${globals.upload-ssh-keys}"
-                }
-            }
-        },
-        "get-tokens": {
-            "script": "${globals.get-tokens}",
-            "next": "send-tokens"
-        },
-        "send-tokens": {
-            "install": {
-                "jps": {
-                    "type": "update",
-                    "name": "Swarm Cluster",
-                    "baseUrl": "${baseUrl}",
-                    "onInstall": [
-                        "upload-ssh-keys"
-                    ],
-                    "actions": {
-                        "upload-ssh-keys": {
-                            "script": "${globals.upload-ssh-keys}"
-                        },
-                        "no-ssh-keys": {
-                            "return": {
-                                "type": "success",
-                                "message": "/text/swarm-success-no-ssh-keys.md",
-                                "email": "/text/swarm-success-no-ssh-keys.md"
-                            }
-                        }
-                    },
-                    "success": {
-                        "text": "/text/swarm-success.md",
-                        "email": "/text/swarm-success.md"
-                    }
-                },
-                "settings": {
-                    "manager_token": "${this.manager}",
-                    "worker_token": "${this.worker}"
-                }
-            }
-        },
-        "portainer": {
-            "if ('${settings.portainer}' == 'true')": {
-                "install": {
-                    "jps": "${baseUrl}/portainer.jps?_r=${fn.random}",
-                    "settings": {
-                        "mode": "swarm"
-                    }
-                }
-            }
-        }
+      }
     },
-    "jpsVersion": "1.1"
+    "get-tokens": {
+      "script": "${globals.get-tokens}",
+      "next": "send-tokens"
+    },
+    "no-ssh-keys": {
+      "return": {
+        "type": "success",
+        "message": "/text/swarm-success-no-ssh-keys.md",
+        "email": "/text/swarm-success-no-ssh-keys.md"
+      }
+    },
+    "send-tokens": {
+      "script": "${globals.upload-ssh-keys}",
+      "params": {
+        "worker": "${this.worker}",
+        "manager": "${this.manager}"
+      }
+    },
+    "portainer": {
+      "if ('${settings.portainer}' == 'true')": {
+        "install": {
+          "jps": "${baseUrl}/portainer.jps?_r=${fn.random}",
+          "settings": {
+            "mode": "swarm"
+          }
+        }
+      }
+    }
+  },
+  "jpsVersion": "1.1"
 }
