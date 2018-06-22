@@ -16,7 +16,7 @@
         "stackNameDeploy": {
             "cmd[${nodes.cp.first.id}]": [
                 "url=${settings.yml}",
-                "url=$(echo ${url/\/blob\///raw/})",
+                "url=$(echo ${url/\/blob\//\/raw\/})",
                 "project=$(echo ${url%/raw*})",
                 "git clone $project.git >> ${globals.log}",
                 "IFS='/' read -r -a array <<< $project",
