@@ -17,8 +17,11 @@
             "cmd[${nodes.cp.first.id}]": [
                 "url=${settings.yml}",
                 "url=$(echo ${url/\/blob\///raw/})",
-                "curl -L -o docker-stack-${settings.stackName}.yml $url >> ${globals.log}",
-                "docker stack deploy -c docker-stack-${settings.stackName}.yml ${settings.stackName} >> ${globals.log}"
+                "project=$(echo ${url%/raw*})",
+                "IFS='/' read -r -a array <<< $project",
+                "cd ${array[4]}",
+                "git clone $project.git >> ${globals.log}",
+                "docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}"
             ]
         },
         "stackDeploy": {
