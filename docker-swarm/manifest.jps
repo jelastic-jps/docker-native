@@ -45,12 +45,18 @@ settings:
     default: clean
     showIf:
       deploy:
-        name: yml
-        type: string
-        caption: Stack YML URL
-        default: https://raw.githubusercontent.com/vfarcic/docker-flow-proxy/master/docker-compose-stack.yml
-        required: true
-        vtype: url
+        - name: yml
+          type: string
+          caption: Stack YML URL
+          default: https://github.com/openfaas/faas/blob/master/docker-compose.yml
+          required: true
+          vtype: url
+        - name: stackName
+          type: string
+          caption: Stack Name
+          default: func
+          required: true
+
       clean:
         name: portainer
         type: checkbox
@@ -112,7 +118,8 @@ actions:
         jps: "${baseUrl}/docker-deploy.jps?_r=${fn.random}"
         settings:
           yml: "${settings.yml}"
-          type: stack
+          stackName: "${settings.stackName}"
+          type: stackName
           
   re-import-button:
     install:
@@ -143,3 +150,5 @@ actions:
         jps: ${baseUrl}/portainer.jps?_r=${fn.random}
         settings:
           mode: swarm
+          
+startPage: http://${env.domain}:8080
