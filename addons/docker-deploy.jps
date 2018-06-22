@@ -18,9 +18,9 @@
                 "url=${settings.yml}",
                 "url=$(echo ${url/\/blob\///raw/})",
                 "project=$(echo ${url%/raw*})",
+                "git clone $project.git >> ${globals.log}",
                 "IFS='/' read -r -a array <<< $project",
                 "cd ${array[4]}",
-                "git clone $project.git >> ${globals.log}",
                 "docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}"
             ]
         },
