@@ -17,7 +17,7 @@
             "cmd[${nodes.cp.first.id}]": [
                 "url=${settings.yml}",
                 "url=$(echo ${url/\/blob\///raw/})",
-                "curl -o docker-stack-${settings.stackName}.yml $url >> ${globals.log}",
+                "curl -L -o docker-stack-${settings.stackName}.yml $url >> ${globals.log}",
                 "docker stack deploy -c docker-stack-${settings.stackName}.yml ${settings.stackName} >> ${globals.log}"
             ]
         },
