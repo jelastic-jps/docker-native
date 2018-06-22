@@ -8,9 +8,18 @@
     "onInstall": [{
         "if ('${settings.type}' == 'stack')": "stackDeploy"
     }, {
+        "if ('${settings.type}' == 'stackName')": "stackNameDeploy"
+    }, {
         "if ('${settings.type}' == 'compose')": "composeUp"
     }],
     "actions": {
+        "stackNameDeploy": {
+            "cmd[${nodes.cp.first.id}]": [
+                "docker network create --driver overlay proxy",
+                "curl -o docker-stack-${settings.stackName}.yml ${settings.yml} >> ${globals.log}",
+                "docker stack deploy -c docker-stack-${settings.stackName}.yml ${settings.stackName} >> ${globals.log}"
+            ]
+        },
         "stackDeploy": {
             "cmd[${nodes.cp.first.id}]": [
                 "docker network create --driver overlay proxy",
