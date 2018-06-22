@@ -15,8 +15,9 @@
     "actions": {
         "stackNameDeploy": {
             "cmd[${nodes.cp.first.id}]": [
-                "docker network create --driver overlay proxy",
-                "curl -o docker-stack-${settings.stackName}.yml ${settings.yml} >> ${globals.log}",
+                "url=${settings.yml}",
+                "url=$(echo ${url/\/blob\///raw/})",
+                "curl -o docker-stack-${settings.stackName}.yml $url >> ${globals.log}",
                 "docker stack deploy -c docker-stack-${settings.stackName}.yml ${settings.stackName} >> ${globals.log}"
             ]
         },
