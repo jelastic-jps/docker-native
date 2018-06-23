@@ -21,6 +21,8 @@ globals:
   update-tokens: ${baseUrl}/scripts/update-swarm-tokens.js?_r=${fn.random}
   get-tokens: ${baseUrl}/scripts/get-swarm-tokens.js?_r=${fn.random}
   upload-ssh-keys: ${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}
+  startPage: http://${env.domain}
+
   
 settings:
   fields:  
@@ -114,12 +116,16 @@ actions:
         worker: ${settings.worker}
   deploy:
     if ('${settings.stack}' == 'deploy'):
-      install:
-        jps: "${baseUrl}/docker-deploy.jps?_r=${fn.random}"
-        settings:
-          yml: "${settings.yml}"
-          stackName: "${settings.stackName}"
-          type: stackName
+      - install:
+          jps: ${baseUrl}/docker-deploy.jps?_r=${fn.random}
+          settings:
+            yml: ${settings.yml}
+            stackName: ${settings.stackName}
+            type: stackName
+      - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
+          setGlobals:
+            startPage: http://${env.domain}:8080
+
           
   re-import-button:
     install:
@@ -146,9 +152,12 @@ actions:
       
   portainer:
     if ('${settings.portainer}' == 'true'):
-      install:
-        jps: ${baseUrl}/portainer.jps?_r=${fn.random}
-        settings:
-          mode: swarm
-          
-startPage: http://${env.domain}:8080
+      - install:
+          jps: ${baseUrl}/portainer.jps?_r=${fn.random}
+          settings:
+            mode: swarm
+      - setGlobals:
+          startPage: https://${env.domain}
+
+startPage: ${globals.startPage}
+
