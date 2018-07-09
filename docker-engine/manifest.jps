@@ -14,8 +14,7 @@
     "name": "Docker Engine CE",
     "targetRegions": {
         "type": "vz7"
-    },
-    "region": "vz7",    
+    }, 
     "globals": {
         "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
     },
