@@ -8,9 +8,22 @@
     "onInstall": [{
         "if ('${settings.type}' == 'stack')": "stackDeploy"
     }, {
+        "if ('${settings.type}' == 'stackName')": "stackNameDeploy"
+    }, {
         "if ('${settings.type}' == 'compose')": "composeUp"
     }],
     "actions": {
+        "stackNameDeploy": {
+            "cmd[${nodes.cp.first.id}]": [
+                "url=${settings.yml}",
+                "url=$(echo ${url/\\/blob\\//\\/raw\\/})",
+                "project=$(echo ${url%/raw*})",
+                "git clone $project.git >> ${globals.log}",
+                "IFS='/' read -r -a array <<< $project",
+                "cd ${array[4]}",
+                "docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}"
+            ]
+        },
         "stackDeploy": {
             "cmd[${nodes.cp.first.id}]": [
                 "docker network create --driver overlay proxy",
