@@ -1,7 +1,8 @@
 import com.hivext.api.core.utils.Transport;
 
 //reading script from URL
-var scriptBody = new Transport().get("${baseUrl}/text/swarm-success.md?_r=${fn.random}");
+file = (mode == "swarm") ? "swarm" : "engine"
+var scriptBody = new Transport().get("${baseUrl}/text/" + file + "-success.md?_r=${fn.random}");
 scriptBody = scriptBody.replace("{MANAGER}", "${this.manager}");
 scriptBody = scriptBody.replace("{WORKER}", "${this.worker}");
 
