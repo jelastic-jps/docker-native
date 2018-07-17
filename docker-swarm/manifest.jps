@@ -2,7 +2,7 @@
 type: install
 version: 1.1
 id: docker-swarm-ce
-baseUrl: https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons
+baseUrl: https://raw.githubusercontent.com/siruslan/docker-native/master/addons
 description:
   text: /text/description-swarm.md
   short: Docker Swarm Cluster with out-of-box auto-clustering and auto-scaling
@@ -36,7 +36,7 @@ settings:
     caption: Worker
     min: 1
     max: 10
-    default: 2
+    default: 1
     
   - name: stack
     type: radio-fieldset
@@ -124,8 +124,7 @@ actions:
       - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
           setGlobals:
             startPage: http://${env.domain}:8080
-
-          
+        
   re-import-button:
     install:
       jps: ${baseUrl}/re-import-ssh-keys.jps?_r=${fn.random}
@@ -135,20 +134,27 @@ actions:
         
   get-tokens:
     script: ${globals.get-tokens}
-    next: send-tokens
+    next: upload-ssh-keys-and-send-tokens
     
   no-ssh-keys:
-    return:
-      type: success
-      message: /text/swarm-success-no-ssh-keys.md
-      email: /text/swarm-success-no-ssh-keys.md
+    - send-success:
+        manager_token: ${this.manager}
+        worker_token: ${this.worker}
+        name: swarm-success-no-ssh-keys.md
       
-  send-tokens:
-    script: ${globals.upload-ssh-keys}
-    params:
-      worker: ${this.worker}
-      manager: ${this.manager}
-      
+  upload-ssh-keys-and-send-tokens:
+    - script: ${globals.upload-ssh-keys}
+    - send-success:
+        manager_token: ${this.manager}
+        worker_token: ${this.worker}
+        name: swarm-success.md
+    
+  send-success: 
+    script: |
+        import com.hivext.api.core.utils.Transport;
+        var text = new Transport().get('${baseUrl}/text/${this.name}?_r=${fn.random}').replace('${globals.manager_token}', '${this.manager_token}').replace('${globals.worker_token}', '${this.worker_token}')
+        return {type:'success', message:text, email:text}
+
   portainer:
     if ('${settings.portainer}' == 'true'):
       - install:
@@ -159,4 +165,3 @@ actions:
           startPage: https://${env.domain}
 
 startPage: ${globals.startPage}
-
