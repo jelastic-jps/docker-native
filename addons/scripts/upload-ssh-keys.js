@@ -5,6 +5,7 @@ if (kl == 0 || true) return {
     result: 0,
     onAfterReturn: {
         "no-ssh-keys": {
+            manager: '${this.manager}',
             worker: '${this.worker}'
         }
     }
