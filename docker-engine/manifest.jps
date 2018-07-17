@@ -7,8 +7,9 @@ description:
   text: /text/description-engine.md
   short: Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node
 categories:
-- apps/popular
-- apps/clusters
+  - apps/popular
+  - apps/clusters
+  - apps/dev-and-admin-tools
 logo: ../images/docker-engine-logo-94x70.png
 name: Docker Engine CE
 targetRegions:
