@@ -1,9 +1,13 @@
 resp = jelastic.users.account.GetSSHKeys(appid, session, false)
 if (resp.result != 0 || resp.keys == null) return resp
 kl = resp.keys.length
-if (kl == 0) return {
+if (kl == 0 && true) return {
     result: 0,
-    onAfterReturn: "no-ssh-keys"
+    onAfterReturn: {
+        "no-ssh-keys": {
+            worker: '${this.worker}'
+        }
+    }
 }
 
 //uploading all public keys
