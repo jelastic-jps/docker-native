@@ -57,12 +57,17 @@ settings:
           caption: Stack Name
           default: func
           required: true
+        - name: preHook
+          type: string
+          caption: Pre Hook
+          inputType: hidden
 
       clean:
         name: portainer
         type: checkbox
         caption: Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management
         value: false
+        
   - name: autoscaling
     type: checkbox
     caption: Enable Horizontal Auto-Scaling
@@ -89,7 +94,7 @@ onInstall:
   - init-swarm
   - scaling-events
   - if (${settings.autoscaling}): scaling-triggers
-  - deploy
+  - if ('${settings.stack}' == 'deploy'): deploy
   - re-import-button
   - portainer
   - get-tokens
@@ -114,16 +119,17 @@ actions:
         mngr: ${settings.mngr}
         worker: ${settings.worker}
   deploy:
-    if ('${settings.stack}' == 'deploy'):
-      - install:
-          jps: ${baseUrl}/docker-deploy.jps?_r=${fn.random}
-          settings:
-            yml: ${settings.yml}
-            stackName: ${settings.stackName}
-            type: stackName
-      - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
-          setGlobals:
-            startPage: http://${env.domain}:8080
+    - install:
+        jps: ${baseUrl}/docker-deploy.jps?_r=${fn.random}
+        settings:
+          yml: ${settings.yml}
+          stackName: ${settings.stackName}
+          type: stackName
+          preHook: ${settings.preHook}
+ 
+    - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
+        setGlobals:
+          startPage: http://${env.domain}:8080
         
   re-import-button:
     install:
