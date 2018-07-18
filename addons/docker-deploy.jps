@@ -1,52 +1,40 @@
-{
-    "jpsType": "update",
-    "id": "docker-deploy",
-    "name": "Docker Deploy ",
-    "globals": {
-        "log": "/var/log/run.log"
-    },
-    "onInstall": [{
-        "if ('${settings.type}' == 'stack')": "stackDeploy"
-    }, {
-        "if ('${settings.type}' == 'stackName')": "stackNameDeploy"
-    }, {
-        "if ('${settings.type}' == 'compose')": "composeUp"
-    }],
-    "actions": {
-        "stackNameDeploy": {
-            "cmd[${nodes.cp.first.id}]": [
-                "url=${settings.yml}",
-                "url=$(echo ${url/\\/blob\\//\\/raw\\/})",
-                "project=$(echo ${url%/raw*})",
-                "git clone $project.git >> ${globals.log}",
-                "IFS='/' read -r -a array <<< $project",
-                "cd ${array[4]}",
-                "docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}"
-            ]
-        },
-        "stackDeploy": {
-            "cmd[${nodes.cp.first.id}]": [
-                "docker network create --driver overlay proxy",
-                "curl -o docker-stack.yml ${settings.yml} >> ${globals.log}",
-                "docker stack deploy -c docker-stack.yml proxy >> ${globals.log}"
-            ]
-        },
-        "serviceDeploy": {
-            "cmd[${nodes.cp.first.id}]": [
-                "docker service create --name demo --replicas $NBR_REPLICA --publish ${EXPOSED_PORT}:${SERVICE_PORT} ${SERVICE_IMAGE} >> ${globals.log}"
-            ]
-        },
-        "composeUp": {
-            "cmd[cp]": [
-                "git clone ${settings.repo} application >> ${globals.log}",
-                "cd application && docker-compose up -d >> ${globals.log}"
-            ]
-        }
-    },
-    "responses": {
-        "4109": {
-            "type": "error",
-            "message": "Deployment failed: please check <i>${globals.log}</i> inside the node for more details."
-        }
-    }
-}
+---
+jpsType: update
+id: docker-deploy
+name: Docker Deploy
+globals:
+  log: /var/log/run.log
+onInstall:
+  - if ('${settings.preHook}' != '$'+'{settings.preHook}'): execPreHook
+  - if ('${settings.type}' == 'stack'): stackDeploy
+  - if ('${settings.type}' == 'stackName'): stackNameDeploy
+  - if ('${settings.type}' == 'compose'): composeUp
+actions:
+  execPreHook: 
+    cmd[${nodes.cp.master.id}]: ${settings.preHook}
+   
+  stackNameDeploy:
+    cmd[${nodes.cp.master.id}]: |-
+      url=${settings.yml}
+      url=$(echo ${url/\/blob\//\/raw\/})
+      project=$(echo ${url%/raw*})
+      git clone $project.git >> ${globals.log}
+      IFS='/' read -r -a array <<< $project
+      cd ${array[4]}
+      docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}
+  stackDeploy:
+    cmd[${nodes.cp.master.id}]: |-
+      docker network create --driver overlay proxy
+      curl -o docker-stack.yml ${settings.yml} >> ${globals.log}
+      docker stack deploy -c docker-stack.yml proxy >> ${globals.log}
+  serviceDeploy:
+    cmd[${nodes.cp.master.id}]: |-
+      docker service create --name demo --replicas $NBR_REPLICA --publish ${EXPOSED_PORT}:${SERVICE_PORT} ${SERVICE_IMAGE} >> ${globals.log}
+  composeUp:
+    cmd[cp]: |-
+      git clone ${settings.repo} application >> ${globals.log}
+      cd application && docker-compose up -d >> ${globals.log}
+responses:
+  4109:
+    type: error
+    message: 'Deployment failed: please check _${globals.log}_ inside the node for more details.'
