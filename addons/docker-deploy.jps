@@ -5,7 +5,7 @@ name: Docker Deploy
 globals:
   log: /var/log/run.log
 onInstall:
-  - if ("${settings.preHook}" != "$"+"{settings.preHook}"): execPreHook
+  - if ("${settings.preHook}" && "${settings.preHook}" != "$"+"{settings.preHook}"): execPreHook
   - if ('${settings.type}' == 'stack'): stackDeploy
   - if ('${settings.type}' == 'stackName'): stackNameDeploy
   - if ('${settings.type}' == 'compose'): composeUp
