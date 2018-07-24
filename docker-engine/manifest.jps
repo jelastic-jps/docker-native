@@ -83,8 +83,8 @@ onInstall:
   - deploy
   - connect-to-swarm
   - re-import-button
-  - upload-ssh-keys
   - portainer
+  - upload-ssh-keys
   
 onAfterScaleOut[${settings.role}]: connect-to-swarm
 
