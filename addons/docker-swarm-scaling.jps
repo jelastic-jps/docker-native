@@ -5,14 +5,14 @@
   "onInstall": [
     {
       "script": "${settings.update-tokens}",
-      "nodeId": "${nodes.cp.first.id}"
+      "nodeId": "${nodes.cp.master.id}"
     },
     {
       "log": "Connecting Manager Nodes"
     },
     {
       "forEach(nodes.cp)": {
-        "if (${@i.id} != ${nodes.cp.first.id})": {
+        "if (${@i.id} != ${nodes.cp.master.id})": {
           "script": "${settings.connect-node}",
           "params": {
             "id": "${@i.id}",
@@ -76,7 +76,7 @@
     "connectNode": {
       "cmd[${this.id}]": [
         "docker swarm leave --force &>> /var/log/run.log",
-        "docker swarm join --token ${this.token} ${nodes.cp.first.intIP}:2377 >> /var/log/run.log"
+        "docker swarm join --token ${this.token} ${nodes.cp.master.intIP}:2377 >> /var/log/run.log"
       ]
     },
     "removeNode": [
