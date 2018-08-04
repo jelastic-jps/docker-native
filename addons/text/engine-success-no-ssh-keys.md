@@ -5,7 +5,7 @@ Alternatively, you can use Jelastic [SSH Gate](https://docs.jelastic.com/ssh-gat
 ### Create remote connection
 ```
 docker-machine create --driver generic \
---generic-ip-address=${nodes.cp.first.extIPs[0]} \
+--generic-ip-address=${nodes.cp.master.extIPs[0]} \
 --generic-ssh-key ~/.ssh/id_rsa \
 --engine-storage-driver overlay ${env.envName}
 ```
