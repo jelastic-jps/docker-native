@@ -20,7 +20,7 @@ globals:
   update-tokens: ${baseUrl}/scripts/update-swarm-tokens.js?_r=${fn.random}
   get-tokens: ${baseUrl}/scripts/get-swarm-tokens.js?_r=${fn.random}
   upload-ssh-keys: ${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}
-  startPage: http://${env.domain}
+  startPage: http://${env.domain}/
 
   
 settings:
