@@ -1,179 +1,143 @@
-{
-    "jpsType": "install",
-    "id": "docker-engine-ce",
-    "baseUrl": "https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons",
-    "description": {
-        "text": "/text/description-engine.md",
-        "short": "Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node"
-    },
-    "categories": [
-		"apps/popular",
-		"apps/clusters"
-	],
-    "logo": "../images/docker-engine-logo-94x70.png",
-    "name": "Docker Engine CE",
-    "targetRegions": {
-        "type": "vz7"
-    }, 
-    "globals": {
-        "upload-ssh-keys": "${baseUrl}/scripts/upload-ssh-keys.js"
-    },
-    "settings": {
-        "fields": [{
-            "name": "mode",
-            "type": "radio-fieldset",
-            "values": {
-                "clean": "Create a clean standalone engine",
-                "deploy": "Deploy containers from compose.yml",
-                "swarm-join": "Connect to an existing swarm cluster"
-            },
-            "default": "clean",
-            "showIf": {
-                "deploy": [{
-                    "name": "repo",
-                    "type": "string",
-                    "caption": "Compose Repo",
-                    "default": "https://github.com/vegasbrianc/docker-compose-demo.git",
-                    "required": true,
-                    "vtype": "url"
-                }, {
-                    "name": "role",
-                    "type": "string",
-                    "default": "cp",
-                    "inputType": "hidden"
-                }],
-                "swarm-join": [{
-                    "name": "role",
-                    "type": "list",
-                    "caption": "Role",
-                    "values": {
-                        "cp": "Manager",
-                        "worker": "Worker"
-                    },
-                    "default": "worker",
-                    "required": true
-                }, {
-                    "name": "token",
-                    "type": "string",
-                    "caption": "Token",
-                    "default": "",
-                    "required": true
-                }, {
-                    "name": "host",
-                    "type": "string",
-                    "caption": "Host IP",
-                    "default": "",
-                    "required": true,
-                    "regex": "^(?=\\d+\\.\\d+\\.\\d+\\.\\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.?){4}$",
-                    "regexText": "Invalid IP address format"
-                }],
-                "clean": [{
-                    "name": "portainer",
-                    "type": "checkbox",
-                    "caption": "Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management",
-                    "value": false
-                }, {
-                    "name": "role",
-                    "type": "string",
-                    "default": "cp",
-                    "inputType": "hidden"
-                }]
-            }
-        }]
-    },
-    "nodes": [{
-        "count": "1",
-        "cloudlets": 32,
-        "image": "jelastic/docker-ce",
-        "nodeGroup": "${settings.role}",
-        "displayName": "Engine Node",
-        "extip": "true",
-        "env": {
-            "JELASTIC_EXPOSE": false
-        }
-    }],
-    "onInstall": [
-        "deploy",
-        "connect-to-swarm",
-        "re-import-button",
-        "upload-ssh-keys",
-        "portainer"
-    ],
-    "onAfterScaleOut[${settings.role}]": "connect-to-swarm",
-    "actions": {
-        "deploy": {
-            "if ('${settings.mode}' == 'deploy')": {
-                "install": {
-                    "jps": "${baseUrl}/docker-deploy.jps",
-                    "settings": {
-                        "repo": "${settings.repo}",
-                        "type": "compose"
-                    }
-                }
-            }
-        },
-        "connect-to-swarm": {
-            "if ('${settings.mode}' == 'swarm-join')": [{
-                "sleep": "10000"
-            }, {
-                "if (!event.response.nodes)": {
-                    "swarm-join": {
-                        "filter": "${settings.role}"
-                    }
-                }
-            }, {
-                "if (event.response.nodes)": {
-                    "forEach(event.response.nodes)": {
-                        "swarm-join": {
-                            "filter": "${@i.id}"
-                        }
-                    }
-                }
-            }]
-        },
-        "swarm-join": [{
-            "cmd[${this.filter}]": "docker swarm join --token ${settings.token} ${settings.host}:2377"
-        }, {
-            "if ('${settings.role}' == 'cp')": {
-                "setNodeDisplayName[${this.filter}]": "Manager"
-            },
-            "if ('${settings.role}' == 'worker')": {
-                "setNodeDisplayName[${this.filter}]": "Worker"
-            }
-        }],
-        "re-import-button": {
-            "install": {
-                "jps": "${baseUrl}/re-import-ssh-keys.jps",
-                "nodeGroup": "cp",
-                "settings": {
-                    "upload-ssh-keys": "${globals.upload-ssh-keys}"
-                }
-            }
-        },
-        "upload-ssh-keys": {
-            "script": "/scripts/upload-ssh-keys.js"
-        },
-        "no-ssh-keys": {
-            "return": {
-                "type": "success",
-                "message": "/text/engine-success-no-ssh-keys.md",
-                "email": "/text/engine-success-no-ssh-keys.md"
-            }
-        },
-        "portainer": {
-            "if ('${settings.portainer}' == 'true')": {
-                "install": {
-                    "jps": "${baseUrl}/portainer.jps",
-                    "settings": {
-                        "mode": "engine"
-                    }
-                }
-            }
-        }
-    },
-    "success": {
-        "text": "/text/engine-success.md",
-        "email": "/text/engine-success.md"
-    },
-    "jpsVersion": "1.1"
-}
+---
+type: install
+version: 1.1
+id: docker-engine-ce
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons
+description:
+  text: /text/description-engine.md
+  short: Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node
+categories:
+  - apps/popular
+  - apps/clusters
+  - apps/dev-and-admin-tools
+logo: ../images/docker-engine-logo-94x70.png
+name: Docker Engine CE
+targetRegions:
+  type: vz7
+globals:
+  upload-ssh-keys: ${baseUrl}/scripts/upload-ssh-keys.js
+  
+settings:
+  fields:
+  - name: mode
+    type: radio-fieldset
+    values:
+      clean: Create a clean standalone engine
+      deploy: Deploy containers from compose.yml
+      swarm-join: Connect to an existing swarm cluster
+    default: clean
+    showIf:
+      deploy:
+      - name: repo
+        type: string
+        caption: Compose Repo
+        default: https://github.com/vegasbrianc/docker-compose-demo.git
+        required: true
+        vtype: url
+      - name: role
+        type: string
+        default: cp
+        inputType: hidden
+      swarm-join:
+      - name: role
+        type: list
+        caption: Role
+        values:
+          cp: Manager
+          worker: Worker
+        default: worker
+        required: true
+      - name: token
+        type: string
+        caption: Token
+        default: ''
+        required: true
+      - name: host
+        type: string
+        caption: Host IP
+        default: ''
+        required: true
+        regex: "^(?=\\d+\\.\\d+\\.\\d+\\.\\d+$)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\\.?){4}$"
+        regexText: Invalid IP address format
+      clean:
+      - name: portainer
+        type: checkbox
+        caption: Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lightweight container management
+        value: false
+      - name: role
+        type: string
+        default: cp
+        inputType: hidden
+        
+nodes:
+- count: 1
+  cloudlets: 32
+  image: jelastic/docker-ce
+  nodeGroup: ${settings.role}
+  displayName: Engine Node
+  extip: true
+  env:
+    JELASTIC_EXPOSE: false
+    
+onInstall:
+  - deploy
+  - connect-to-swarm
+  - re-import-button
+  - portainer
+  - upload-ssh-keys
+  
+onAfterScaleOut[${settings.role}]: connect-to-swarm
+
+actions:
+  deploy:
+    if ('${settings.mode}' == 'deploy'):
+      install:
+        jps: ${baseUrl}/docker-deploy.jps
+        settings:
+          repo: "${settings.repo}"
+          type: compose
+          
+  connect-to-swarm:
+    if ('${settings.mode}' == 'swarm-join'):
+    - sleep: 10000
+    - if (!event.response.nodes):
+        swarm-join:
+          filter: ${settings.role}
+    - if (event.response.nodes):
+        forEach(event.response.nodes):
+          swarm-join:
+            filter: "${@i.id}"
+            
+  swarm-join:
+  - cmd[${this.filter}]: docker swarm join --token ${settings.token} ${settings.host}:2377
+  - if ('${settings.role}' == 'cp'):
+      setNodeDisplayName[${this.filter}]: Manager
+    if ('${settings.role}' == 'worker'):
+      setNodeDisplayName[${this.filter}]: Worker
+      
+  re-import-button:
+    install:
+      jps: ${baseUrl}/re-import-ssh-keys.jps
+      nodeGroup: cp
+      settings:
+        upload-ssh-keys: ${globals.upload-ssh-keys}
+        
+  upload-ssh-keys:
+    script: /scripts/upload-ssh-keys.js
+    
+  no-ssh-keys:
+    return:
+      type: success
+      message: /text/engine-success-no-ssh-keys.md
+      email: /text/engine-success-no-ssh-keys.md
+      
+  portainer:
+    if ('${settings.portainer}' == 'true'):
+      install:
+        jps: ${baseUrl}/portainer.jps
+        settings:
+          mode: engine
+          
+success:
+  text: /text/engine-success.md
+  email: /text/engine-success.md

@@ -36,7 +36,7 @@ settings:
     caption: Worker
     min: 1
     max: 10
-    default: 2
+    default: 1
     
   - name: stack
     type: radio-fieldset
@@ -57,12 +57,17 @@ settings:
           caption: Stack Name
           default: func
           required: true
+        - name: preHook
+          type: string
+          caption: Pre Hook
+          inputType: hidden
 
       clean:
         name: portainer
         type: checkbox
-        caption: Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lighweight container management
+        caption: Install <a href='https://portainer.io' target='_blank'>Portainer UI</a> - lightweight container management
         value: false
+        
   - name: autoscaling
     type: checkbox
     caption: Enable Horizontal Auto-Scaling
@@ -89,7 +94,7 @@ onInstall:
   - init-swarm
   - scaling-events
   - if (${settings.autoscaling}): scaling-triggers
-  - deploy
+  - if ('${settings.stack}' == 'deploy'): deploy
   - re-import-button
   - portainer
   - get-tokens
@@ -114,18 +119,18 @@ actions:
         mngr: ${settings.mngr}
         worker: ${settings.worker}
   deploy:
-    if ('${settings.stack}' == 'deploy'):
-      - install:
-          jps: ${baseUrl}/docker-deploy.jps?_r=${fn.random}
-          settings:
-            yml: ${settings.yml}
-            stackName: ${settings.stackName}
-            type: stackName
-      - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
-          setGlobals:
-            startPage: http://${env.domain}:8080
-
-          
+    - install:
+        jps: ${baseUrl}/docker-deploy.jps?_r=${fn.random}
+        settings:
+          yml: ${settings.yml}
+          stackName: ${settings.stackName}
+          type: stackName
+          preHook: ${settings.preHook}
+ 
+    - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
+        setGlobals:
+          startPage: http://${env.domain}:8080
+        
   re-import-button:
     install:
       jps: ${baseUrl}/re-import-ssh-keys.jps?_r=${fn.random}
@@ -135,20 +140,27 @@ actions:
         
   get-tokens:
     script: ${globals.get-tokens}
-    next: send-tokens
+    next: upload-ssh-keys-and-send-tokens
     
   no-ssh-keys:
-    return:
-      type: success
-      message: /text/swarm-success-no-ssh-keys.md
-      email: /text/swarm-success-no-ssh-keys.md
+    - send-success:
+        manager_token: ${this.manager}
+        worker_token: ${this.worker}
+        name: swarm-success-no-ssh-keys.md
       
-  send-tokens:
-    script: ${globals.upload-ssh-keys}
-    params:
-      worker: ${this.worker}
-      manager: ${this.manager}
-      
+  upload-ssh-keys-and-send-tokens:
+    - script: ${globals.upload-ssh-keys}
+    - send-success:
+        manager_token: ${this.manager}
+        worker_token: ${this.worker}
+        name: swarm-success.md
+    
+  send-success: 
+    script: |
+        import com.hivext.api.core.utils.Transport;
+        var text = new Transport().get('${baseUrl}/text/${this.name}?_r=${fn.random}').replace('${globals.manager_token}', '${this.manager_token}').replace('${globals.worker_token}', '${this.worker_token}')
+        return {type:'success', message:text, email:text}
+
   portainer:
     if ('${settings.portainer}' == 'true'):
       - install:
@@ -159,4 +171,3 @@ actions:
           startPage: https://${env.domain}
 
 startPage: ${globals.startPage}
-
