@@ -2,7 +2,7 @@
 type: install
 version: 1.1
 id: docker-swarm-ce
-baseUrl: https://raw.githubusercontent.com/siruslan/docker-native/master/addons
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons
 description:
   text: /text/description-swarm.md
   short: Docker Swarm Cluster with out-of-box auto-clustering and auto-scaling
