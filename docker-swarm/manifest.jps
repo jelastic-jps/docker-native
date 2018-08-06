@@ -129,7 +129,7 @@ actions:
  
     - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
         setGlobals:
-          startPage: http://${env.domain}:8080
+          startPage: http://${env.domain}:8080/
         
   re-import-button:
     install:
@@ -168,6 +168,6 @@ actions:
           settings:
             mode: swarm
       - setGlobals:
-          startPage: https://${env.domain}
+          startPage: https://${env.domain}/
 
 startPage: ${globals.startPage}
