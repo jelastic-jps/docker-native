@@ -2,7 +2,7 @@
 type: install
 version: 1.1
 id: docker-engine-ce
-baseUrl: https://raw.githubusercontent.com/siruslan/docker-native/master/addons
+baseUrl: https://raw.githubusercontent.com/jelastic-jps/docker-native/master/addons
 description:
   text: /text/description-engine.md
   short: Automatic Installation of Docker Engine (CE) as a Standalone or Worker Node
