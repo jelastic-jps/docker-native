@@ -1,7 +1,7 @@
 ### Create remote connection
 ```
 docker-machine create --driver generic \
---generic-ip-address=${nodes.cp.master.extIPs[0]} \
+--generic-ip-address=${globals.ip} \
 --generic-ssh-key ~/.ssh/id_rsa \
 --engine-storage-driver overlay ${env.envName}
 ```
