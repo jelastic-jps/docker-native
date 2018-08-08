@@ -22,7 +22,6 @@ globals:
   upload-ssh-keys: ${baseUrl}/scripts/upload-ssh-keys.js?_r=${fn.random}
   startPage: http://${env.domain}/
 
-  
 settings:
   fields:  
   - type: spinner
@@ -49,13 +48,13 @@ settings:
         - name: yml
           type: string
           caption: Stack YML URL
-          default: https://github.com/openfaas/faas/blob/master/docker-compose.yml
+          default: https://github.com/jelastic/example-voting-app/blob/master/docker-stack.yml
           required: true
           vtype: url
         - name: stackName
           type: string
           caption: Stack Name
-          default: func
+          default: example
           required: true
         - name: preHook
           type: string
@@ -89,7 +88,9 @@ nodes:
     cloudlets: 32
     env:
       JELASTIC_EXPOSE: false
-    
+ 
+skipNodeEmails: true
+ 
 onInstall:
   - init-swarm
   - scaling-events
@@ -130,6 +131,10 @@ actions:
     - if ('${settings.yml}'.indexOf('/openfaas/') > -1):
         setGlobals:
           startPage: http://${env.domain}:8080/
+
+    - if ('${settings.yml}'.indexOf('/example-voting-app/') > -1):
+        setGlobals:
+          startPage: http://${env.domain}:5000/
         
   re-import-button:
     install:
