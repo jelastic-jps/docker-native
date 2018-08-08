@@ -89,7 +89,7 @@ nodes:
     env:
       JELASTIC_EXPOSE: false
  
-skipNodeEmails: true  
+skipNodeEmails: true
  
 onInstall:
   - init-swarm
