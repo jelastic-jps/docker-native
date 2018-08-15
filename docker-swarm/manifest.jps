@@ -9,6 +9,7 @@ description:
 categories:
   - apps/popular
   - apps/clusters
+  - apps/microservices
   - apps/dev-and-admin-tools
 logo: ../images/docker-swarm-logo-89x70.png
 name: Docker Swarm Cluster
