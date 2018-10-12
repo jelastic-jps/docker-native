@@ -10,6 +10,8 @@ categories:
   - apps/popular
   - apps/clusters
   - apps/dev-and-admin-tools
+  - apps/microservices
+
 logo: ../images/docker-engine-logo-94x70.png
 name: Docker Engine CE
 targetRegions:
