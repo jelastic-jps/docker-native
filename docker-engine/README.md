@@ -20,8 +20,6 @@ Log into your Jelastic account and [import](https://docs.jelastic.com/environmen
 
 ![Docker Engine Installation](/images/docker-engine-installation.png)
 
-> **Note:** Every Docker Engine container is automatically provisioned with a [Public IP](http://docs.jelastic.com/public-ipv4) address to allow accessing it remotely via _docker-machine_.
-
 Here, you need to provide some details on the desired Docker Engine environment parameters:
 * choose the preferred installation type
   * _**Create a clean standalone engine**_ - to integrate the newly created Engine container into the already run Docker Swarm with either _Manager_ or _Worker_ role, through providing the appropriate cluster _Join Token_ and _Host IP_

@@ -16,8 +16,6 @@ logo: ../images/docker-engine-logo-94x70.png
 name: Docker Engine CE
 targetRegions:
   type: vz7
-globals:
-  upload-ssh-keys: ${baseUrl}/scripts/upload-ssh-keys.js
   
 settings:
   fields:
@@ -84,9 +82,8 @@ nodes:
 onInstall:
   - deploy
   - connect-to-swarm
-  - re-import-button
   - portainer
-  - upload-ssh-keys
+  - no-ssh-keys
   
 onAfterScaleOut[${settings.role}]: connect-to-swarm
 
@@ -116,16 +113,6 @@ actions:
       setNodeDisplayName[${this.filter}]: Manager
     if ('${settings.role}' == 'worker'):
       setNodeDisplayName[${this.filter}]: Worker
-      
-  re-import-button:
-    install:
-      jps: ${baseUrl}/re-import-ssh-keys.jps
-      nodeGroup: cp
-      settings:
-        upload-ssh-keys: ${globals.upload-ssh-keys}
-        
-  upload-ssh-keys:
-    script: /scripts/upload-ssh-keys.js
     
   no-ssh-keys:
     return:

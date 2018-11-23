@@ -5,14 +5,14 @@
     "onInstall": [{
         "log": "Swarm Init"
     }, {
-        "if ('${nodes.cp.master.extIPs[0]}' == '${nodes.cp.master'+'.extIPs[0]}')": {
+        "if ('${nodes.cp.master.intIP}' == '${nodes.cp.master'+'.intIP}')": {
             "swarmInit": {
                 "address": ""
             }
         },
-        "if ('${nodes.cp.master.extIPs[0]}' != '${nodes.cp.master'+'.extIPs[0]}')": {
+        "if ('${nodes.cp.master.intIP}' != '${nodes.cp.master'+'.intIP}')": {
             "swarmInit": {
-                "address": "--advertise-addr ${nodes.cp.master.extIPs[0]}"
+                "address": "--advertise-addr ${nodes.cp.master.intIP}"
             }
         }
     }],
