@@ -1,4 +1,4 @@
-![Docker Engine Logo](/images/docker-engine-logo.png)
+![Docker Engine Logo](../images/docker-engine-logo.png)
 
 # Docker Engine
 
@@ -18,21 +18,21 @@ The current solution proposes several deployment options, allowing to run a new 
 
 Log into your Jelastic account and [import](https://docs.jelastic.com/environment-import) link to the _manifest.jps_ within this repo root (this package is also delivered through [Jelastic Marketplace](https://docs.jelastic.com/marketplace)):
 
-![Docker Engine Installation](/images/docker-engine-installation.png)
+![Docker Engine Installation](../images/install-clean-standalone.png)
 
 Here, you need to provide some details on the desired Docker Engine environment parameters:
 * choose the preferred installation type
   * _**Create a clean standalone engine**_ - to integrate the newly created Engine container into the already run Docker Swarm with either _Manager_ or _Worker_ role, through providing the appropriate cluster _Join Token_ and _Host IP_
 
-    ![Docker Engine Standalone](/images/docker-engine-standalone.png)
+ ![Docker Engine Standalone](../images/docker-engine-standalone-portainer.png) 
 
   * _**Connect to an existing swarm cluster**_ - to automatically include the newly created Docker Engine container into the existing Docker Swarm cluster (with either Manager or Worker role) through providing the appropriate cluster _Join Token_ and _Host IP_
 
-    ![Docker Engine Connect Swarm](/images/docker-engine-connect-swarm.png)
+ ![Docker Engine Connect Swarm](../images/docker-engine-2cluster.png)
 
   * _**Deploy containers from compose.yml**_ - to set up an engine node with the automatically deployed application from the specified custom repository
 
-    ![Docker Engine Deploy](/images/docker-engine-deploy.png)
+ ![Docker Engine Deploy](../images/docker-engine-compose.png)
 
 * **Environment** - type a name for your environment
 * **Display Name** - optionally, specify an [environment alias](https://docs.jelastic.com/environment-aliases) for its better differentiation within the Jelastic dashboard and [SSH Gate](https://docs.jelastic.com/ssh-gate)
@@ -47,14 +47,15 @@ The Docker Engine node could be connected to and managed in the following ways, 
 
 In case you’ve defined to install the Portainer UI when setting up a bare Engine instance, the appropriate management panel can be accessed by simply opening your environment URL in a browser through HTTPS. 
 
-![Docker Engine Portainer UI](/images/docker-engine-portainer-ui.png)
-
+<p align="left">
+<img border="1" src="../images/portainer-local.png" width="700">
+</p>
 
 > **Note:** By default, connection to Portainer is secured with a [self-signed SSL certificate](https://docs.jelastic.com/self-signed-ssl), thus you might be shown the warning that it’s not trusted by your browser. This does not actually affects the Portainer functionality - you just need to confirm you do want to access the requested page. 
 > 
-> ![Docker Engine Self-Signed SSL Warning](/images/docker-engine-self-signed-ssl-warning.png)
+> <p align="left"><img border="1" src="../images/add-exception.png"  width="500" /p>
 > 
-> The required for that actions could differ depending on a used browser - for example, in Google Chrome you’ll need to expand the **Advanced** section and click on the _Proceed to {env_URL}_ link.
+> The required for that actions could differ depending on a used browser - for example, in Mozilla you have just press **Add Exception** and in Google Chrome you’ll need to expand the **Advanced** section and click on the **_Proceed to {env_URL}_** link.
 
 The appropriate authentication credentials to enter the Portainer itself can be found within the corresponding email notification you’ve received during the Engine server creation.
 
@@ -63,19 +64,7 @@ The appropriate authentication credentials to enter the Portainer itself can be 
 
 To start working over Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to your account, choose an environment with your Docker Engine node and refer to the appropriate topology layer & container.
 
-![Docker Engine SSH Connect](/images/docker-engine-ssh-connect.png)
-
-### Docker Machine
-
-Another way of access is establishing the remote container connection through [Docker machine](https://docs.docker.com/machine/overview/) and generic driver. For that, execute the appropriate commands from the _Create remote connection_ and _Connect to the environment_ sections, provisioned within the solution installation success frame (also, you can find this data within your email box):
-
-![Docker Engine Remote Connect](/images/docker-engine-remote-connect.png)
-
-> **Note:** In case your private SSH key has custom name or location (i.e. path to it differs from the default _~/.ssh/id_rsa_ one), you need to adjust the appropriate value within the _Create remote connection_ command.
-> 
-> Also, the created server is automatically supplied with a special **Add-on**, which allows to _**Re-import**_ the newly added public SSH keys from your Platform account into Docker Engine node, allowing to establish the _docker machine_ connection with new authentication parameters:
-> 
-> ![Docker Engine Reimport SSH Keys](/images/docker-engine-reimport-ssh-keys.png)
+![Docker Engine SSH Connect](../images/ssh.png)
 
 ## Requirements
 
