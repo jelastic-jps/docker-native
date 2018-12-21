@@ -78,7 +78,6 @@ nodes:
     image: jelastic/docker-ce
     nodeGroup: cp
     displayName: Manager
-    extip: 'true'
     env:
       JELASTIC_EXPOSE: false
   - count: ${settings.worker}
@@ -92,6 +91,7 @@ nodes:
 skipNodeEmails: true
  
 onInstall:
+  - addExtIp
   - init-swarm
   - scaling-events
   - if (${settings.autoscaling}): scaling-triggers
@@ -158,6 +158,13 @@ actions:
           settings:
             mode: swarm
       - setGlobals:
-          startPage: https://${env.domain}/
+          startPage: https://${env.domain}:4848/
+
+  addExtIp:
+    script: ${baseUrl}/scripts/attach-external-ip.js?_r=${fn.random}
 
 startPage: ${globals.startPage}
+
+success:
+  text: /text/swarm-success-no-ssh-keys.md
+  email: /text/swarm-success-no-ssh-keys.md

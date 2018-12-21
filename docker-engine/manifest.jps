@@ -16,6 +16,9 @@ logo: ../images/docker-engine-logo-94x70.png
 name: Docker Engine CE
 targetRegions:
   type: vz7
+
+globals:                                                                                                                                                                                                                         
+  startPage: http://${env.domain}/   
   
 settings:
   fields:
@@ -75,11 +78,11 @@ nodes:
   image: jelastic/docker-ce
   nodeGroup: ${settings.role}
   displayName: Engine Node
-  extip: true
   env:
     JELASTIC_EXPOSE: false
     
 onInstall:
+  - addExtIp
   - deploy
   - connect-to-swarm
   - portainer
@@ -122,11 +125,18 @@ actions:
       
   portainer:
     if ('${settings.portainer}' == 'true'):
-      install:
-        jps: ${baseUrl}/portainer.jps
-        settings:
-          mode: engine
-          
+      - install:
+          jps: ${baseUrl}/portainer.jps?_r=${fn.random}
+          settings:
+            mode: engine
+      - setGlobals:
+          startPage: https://${env.domain}:4848/
+
+  addExtIp:
+    script: ${baseUrl}/scripts/attach-external-ip.js?_r=${fn.random}
+
+startPage: ${globals.startPage}
+ 
 success:
-  text: /text/engine-success.md
-  email: /text/engine-success.md
+  text: /text/engine-success-no-ssh-keys.md
+  email: /text/engine-success-no-ssh-keys.md
