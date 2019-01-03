@@ -80,6 +80,8 @@ nodes:
   displayName: Engine Node
   env:
     JELASTIC_EXPOSE: false
+
+skipNodeEmails: true
     
 onInstall:
   - addExtIp
