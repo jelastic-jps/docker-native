@@ -135,7 +135,8 @@ actions:
           startPage: https://${env.domain}:4848/
 
   addExtIp:
-    script: ${baseUrl}/scripts/attach-external-ip.js?_r=${fn.random}
+    if ('${settings.role}' == 'cp'):
+      script: ${baseUrl}/scripts/attach-external-ip.js?_r=${fn.random}
 
 startPage: ${globals.startPage}
  
