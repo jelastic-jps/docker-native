@@ -1,4 +1,3 @@
----
 jpsType: update
 id: docker-deploy
 name: Docker Deploy
@@ -17,10 +16,13 @@ actions:
     cmd[${nodes.cp.master.id}]: |-
       url=${settings.yml}
       url=$(echo ${url/\/blob\//\/raw\/})
-      project=$(echo ${url%/raw*})
+      project=$(echo ${url%/raw/*})
+      rawPath=$(echo ${url#"$project/raw/"})
+      branchAndPath=$(echo ${rawPath%/*.yml})
+      path=$(grep -q '/' <<< ${branchAndPath} && echo ${branchAndPath#*/} || echo '')
       git clone $project.git >> ${globals.log}
       IFS='/' read -r -a array <<< $project
-      cd ${array[4]}
+      cd ${array[4]}/$path
       docker stack deploy -c $(basename $url) ${settings.stackName} >> ${globals.log}
   stackDeploy:
     cmd[${nodes.cp.master.id}]: |-
