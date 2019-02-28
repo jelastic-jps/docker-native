@@ -27,7 +27,7 @@ Log into your Jelastic account and [import](https://docs.jelastic.com/environmen
 ![Docker Swarm Installation](../images/swarm-install-clean-portainer.png)
 
 Here, you need to specify some details to get the cluster you need:
-* **Manager** - number of manager nodes to be included into cluster (with [Public IP](https://docs.jelastic.com/public-ipv4) being automatically attached to each container)
+* **Manager** - number of manager nodes to be included into cluster (with [Public IP](https://docs.jelastic.com/public-ipv4) being automatically attached to master manager node)
 * **Worker** - number of worker nodes to be included into cluster
 * choose deployment type:
   - **_Clean Cluster_** - to create a bare cluster; as an extra option, you can simultaneously install the [Portainer](https://portainer.io/) management UI for convenient operating with a cluster
@@ -50,7 +50,7 @@ After the successful installation, your cluster can be accessed in the following
 
 * ### Portainer UI
 
-In case you’ve installed a clean cluster with the Portainer UI, the appropriate management panel can be accessed by simply opening any of your manager nodes in a browser through _HTTPS_.  
+In case you’ve installed a clean cluster with the Portainer UI, the appropriate management panel can be accessed by simply opening any of your manager nodes in a browser through HTTPS over port 4848.  
 
 <p align="left">
 <img border="1" src="../images/cluster-overview.png" width="800">
@@ -83,5 +83,5 @@ Use Jelastic SSH Gate - just [connect](https://docs.jelastic.com/ssh-access) to 
 Before installing the package, please consider the following points:
 
 * The chosen Platform should run Jelastic of [5.2 version or later](https://jelastic.cloud/?versions=5.3_5.2) and contain environment region(s) with native Docker container support enabled (their presence and names could be found within the same-named column of the [Jelastic Hosting Providers](https://docs.jelastic.com/jelastic-hoster-info) list).
-* The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is provided for billing users only, thus you need to convert your account beforehand.
+* The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is provided for billing users only.
 

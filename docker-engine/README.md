@@ -45,7 +45,7 @@ The Docker Engine node could be connected to and managed in the following ways, 
 
 ### Portainer UI
 
-In case you’ve defined to install the Portainer UI when setting up a bare Engine instance, the appropriate management panel can be accessed by simply opening your environment URL in a browser through HTTPS. 
+In case you’ve defined to install the Portainer UI when setting up a bare Engine instance, the appropriate management panel can be accessed by simply opening your environment URL in a browser through HTTPS over port 4848. 
 
 <p align="left">
 <img border="1" src="../images/portainer-local.png" width="700">
@@ -71,4 +71,4 @@ To start working over Jelastic SSH Gate - just [connect](https://docs.jelastic.c
 Before installing the package, please consider the following points:
 * The appropriate Platform should run Jelastic of [5.2 version or later](https://jelastic.cloud/?versions=5.3_5.2) with the Native Dockers support enabled (i.e. it should contain an [environment region](https://docs.jelastic.com/environment-regions) with [Virtuozzo 7](https://virtuozzo.com/products/virtuozzo/) virtualization being integrated - the appropriate hardware set name(s) could be found within the dedicated column of the [Jelastic Hosting Providers](https://docs.jelastic.com/jelastic-hoster-info) list).
 * In order to be successfully installed, the Docker Engine requires a [public SSH key](https://docs.jelastic.com/ssh-add-key) being added to your Jelastic account (whilst the corresponding private key should be handled at your local machine).
-* The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is usually provided for billing users only, thus you’ll need to convert your account beforehand.
+* The included option of [Public IP](http://docs.jelastic.com/public-ipv4) attachment is usually provided for billing users only.
