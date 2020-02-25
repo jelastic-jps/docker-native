@@ -1,3 +1,5 @@
+# Deprecated. Please refer to [the new repo](https://github.com/jelastic-jps/docker).
+
 ![Docker Engine Logo](images/docker-engine-logo.png) 
 
 ## Native Docker Containers
