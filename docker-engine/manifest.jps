@@ -12,7 +12,7 @@ categories:
 logo: ../images/docker-engine-logo-94x70.png
 name: Docker Engine CE
 targetRegions:
-  type: vz7
+  type: [vz7, vz8]
 
 globals:                                                                                                                                                                                                                         
   startPage: http://${env.domain}/   
