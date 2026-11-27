@@ -11,7 +11,7 @@ categories:
 logo: ../images/docker-swarm-logo-89x70.png
 name: Docker Swarm Cluster
 targetRegions:
-  type: vz7
+  type: [vz7, vz8]
 
 globals:
   connect-node: ${baseUrl}/scripts/connect-swarm-node.js?_r=${fn.random}
